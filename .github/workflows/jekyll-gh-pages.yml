@@ -26,10 +26,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          # cache: pnpm
-      - run: pnpm install
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules docs/node_modules docs/.vitepress/cache
+          pnpm install --frozen-lockfile
         working-directory: docs
-      - run: pnpm docs:build
+      - name: Build
+        run: pnpm docs:build
         working-directory: docs
       - id: pages
         uses: actions/configure-pages@v5
