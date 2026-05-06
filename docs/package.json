@@ -9,6 +9,7 @@
     "docs:preview": "vitepress preview ."
   },
   "dependencies": {
+    "@vueuse/core": "^14.3.0",
     "vue": "^3.5.14",
     "vuetify": "^3.8.5"
   },
