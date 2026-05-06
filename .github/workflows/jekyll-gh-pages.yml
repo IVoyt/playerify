@@ -26,9 +26,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
+      - name: Install package dependencies
         run: |
-          rm -rf node_modules docs/node_modules docs/.vitepress/cache
+          rm -rf node_modules node_modules
+          pnpm install
+      - name: Install docs dependencies
+        run: |
+          rm -rf node_modules node_modules .vitepress/cache
           pnpm install
         working-directory: docs
       - name: Build
