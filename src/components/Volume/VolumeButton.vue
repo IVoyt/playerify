@@ -15,6 +15,7 @@ defineProps({
   <VBtn
     size="32"
     :color="muted ? volumeOffButtonColor : volumeButtonColor"
+    :rounded="btnRounded"
     class="ml-2 mr-3"
     v-bind="props"
     @click="muted = !muted"

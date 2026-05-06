@@ -58,8 +58,8 @@ const vuetify = createVuetify({
 app.use(vuetify);
 
 // add this line
-import TiptapifyPlugin from 'tiptapify';
-import 'tiptapify/style.css';
+import PlayerifyPlugin from 'playerify';
+import 'playerify/style.css';
 app.use(PlayerifyPlugin);
 
 // Mount vue app
@@ -89,8 +89,12 @@ app.mount('#app')
 ```
 
 ## Feedback
-Found a bug or have ideas on improvement? Feel free to [create a ticket](https://github.com/IVoyt/tiptapify/issues/new).
+Found a bug or have ideas on improvement? Feel free to [create a ticket](https://github.com/IVoyt/playerify/issues/new).
 
+## TODO
+* [ ] replace default fullscreen UI
+* [ ] customizable control buttons
+* [ ] cover image
 
 ## Licence
 [MIT](./LICENSE)

@@ -7,8 +7,12 @@ const loop = defineModel('loop')
 const props = defineProps({
   playbackRateButtonColor: { type: String, default () { return 'default' } },
   settingsButtonColor: { type: String, default () { return 'default' } },
+  fullscreenButtonColor: { type: String, default () { return 'default' } },
+  isVideo: { type: Boolean, default () { return false } },
   btnRounded: { type: String, default () { return 'sm' } },
 })
+
+const emits = defineEmits(['toggle-fullscreen'])
 
 const playbackRate = ref(1)
 
@@ -85,6 +89,7 @@ watch(() => playbackRate.value, () => {
     :key="group.name"
     :text="group.name"
     :color="group.btnColor"
+    :rounded="btnRounded"
     size="32"
     class="ml-3"
     @focus="activate($event, group)"
@@ -131,6 +136,18 @@ watch(() => playbackRate.value, () => {
       </VListItem>
     </VList>
   </VMenu>
+  <VBtn
+    v-if="isVideo"
+    :rounded="btnRounded"
+    :color="fullscreenButtonColor"
+    size="32"
+    class="ml-3"
+    @click="emits('toggle-fullscreen')"
+  >
+    <VIcon>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4h2a2 2 0 0 1 2 2v2m0 8v2a2 2 0 0 1-2 2h-2m-8 0H6a2 2 0 0 1-2-2v-2m0-8V6a2 2 0 0 1 2-2h2" /></svg>
+    </VIcon>
+  </VBtn>
 </template>
 
 <style lang="scss" scoped>

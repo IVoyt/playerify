@@ -3,7 +3,7 @@ import ExtraActions from '@playerify/components/ExtraActions.vue'
 import Volume from '@playerify/components/Volume.vue'
 import { reactify, useMediaControls } from '@vueuse/core'
 import { computed, defineProps, reactive, shallowRef, useTemplateRef } from 'vue'
-import { PlayerType } from '@playerify/types'
+import { PlayerType } from '@playerify/enums'
 import YAML from 'yaml'
 
 const props = defineProps({
@@ -18,13 +18,16 @@ const props = defineProps({
   volumeOffButtonColor: { type: String, default () { return 'default' } },
   playbackRateButtonColor: { type: String, default () { return 'default' } },
   settingsButtonColor: { type: String, default () { return 'default' } },
+  fullscreenButtonColor: { type: String, default () { return 'default' } },
   btnRounded: { type: String, default () { return 'sm' } },
   progressRounded: { type: String, default () { return 'sm' } },
   progressSliderColor: { type: String, default () { return 'primary' } },
   volumeSliderColor: { type: String, default () { return 'primary' } },
+  defaultRewind: { type: Number, default () { return 10 } },
   defaultVolume: { type: Number, default () { return 0.8 } },
   progressColor: { type: String, default () { return 'primary' } },
   bufferColor: { type: String, default () { return 'secondary' } },
+  fileName: { type: String, default () { return '' } },
   showFileName: { type: Boolean, default () { return true } },
   showDuration: { type: Boolean, default () { return true } },
   permanentVolumeSlider: { type: Boolean, default () { return true } },
@@ -42,7 +45,26 @@ const defaultVolume = computed(() => {
   return props.defaultVolume
 })
 
-const fileName = computed(() => props.src.split('/').at(-1))
+const defaultRewind = computed(() => {
+  let value = props.defaultRewind
+  if (isFloat(value)) {
+    value = parseInt(value.toFixed())
+  }
+  if (value > 60) {
+    return 60
+  }
+  if (value < 0) {
+    return 1
+  }
+
+  return value
+})
+
+function isFloat(n: number|string) {
+  return typeof n === 'number' && !Number.isNaN(n) && !Number.isInteger(n)
+}
+
+const computedFileName = computed(() => props.fileName || props.src.split('/').at(-1))
 
 const stringify = reactify(
     (input: any) => YAML.stringify(input, (k, v) => {
@@ -80,6 +102,18 @@ const endBuffer = computed(() => buffered.value.length > 0 ? buffered.value[buff
 function formatDuration(seconds: number) {
   return new Date(1000 * seconds).toISOString().slice(14, 19)
 }
+
+function toggleFullscreen () {
+  if (props.type !== PlayerType.VIDEO) {
+    return
+  }
+
+  if (!document.fullscreenElement) {
+    media.value.requestFullscreen()
+  } else {
+    document.exitFullscreen?.()
+  }
+}
 </script>
 
 <template>
@@ -88,8 +122,8 @@ function formatDuration(seconds: number) {
     :tabindex="0"
     autofocus
     @keydown.prevent.space="playing = !playing"
-    @keydown.right="currentTime += 10"
-    @keydown.left="currentTime -= 10"
+    @keydown.right="currentTime += defaultRewind"
+    @keydown.left="currentTime -= defaultRewind"
   >
     <div class="mt-5 relative rounded-md shadow overflow-hidden text-center">
       <template v-if="type === PlayerType.AUDIO">
@@ -111,7 +145,7 @@ function formatDuration(seconds: number) {
         />
       </template>
       <div v-if="showFileName">
-        {{ fileName }}
+        {{ computedFileName }}
       </div>
       <!--      <div>-->
       <!--        Unable to load src-->
@@ -129,7 +163,11 @@ function formatDuration(seconds: number) {
           track-color="transparent"
           :thumb-label="showDuration ? false : 'always'"
           class="play-slider"
-        />
+        >
+          <template #thumb-label="{ modelValue }">
+            {{ formatDuration(modelValue) }}
+          </template>
+        </VSlider>
 
         <VProgressLinear
           v-model="currentTime"
@@ -175,6 +213,9 @@ function formatDuration(seconds: number) {
           :btn-rounded="btnRounded"
           :playback-rate-button-color="playbackRateButtonColor"
           :settings-button-color="settingsButtonColor"
+          :fullscreen-button-color="fullscreenButtonColor"
+          :is-video="type === PlayerType.VIDEO"
+          @toggle-fullscreen="toggleFullscreen"
         />
       </div>
     </div>
@@ -204,6 +245,7 @@ function formatDuration(seconds: number) {
   left: 0;
   z-index: 1;
   width: 100%;
+  margin: 0;
 }
 
 .media-progress-duration {
