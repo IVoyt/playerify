@@ -4,37 +4,21 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   title: 'Playerify',
   description: 'Audio/Video player for Vuetify 3',
-  base: '/playerify/',
+  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  base: '/',
   lang: 'en-US',
 
   vite: {
-    build: {
-      rollupOptions: {
-        external: [/vuetify/],
-      },
-    },
     resolve: {
       alias: {
         '@playerify': fileURLToPath(new URL('../../src', import.meta.url)),
       },
     },
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler',
-        },
-      },
+    ssr: {
+      noExternal: ['vuetify'],
     },
     optimizeDeps: {
       include: ['vuetify'],
-    },
-  },
-
-  builder: {
-    vite: {
-      build: {
-        ssr: false,
-      },
     },
   },
 
@@ -68,7 +52,7 @@ export default defineConfig({
     ],
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024 Igor Voytovich'
+      copyright: 'Copyright © 2026 Igor Voytovich'
     },
   },
 })

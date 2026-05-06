@@ -33,7 +33,6 @@ Register the Playerify plugin in your main entry file (e.g., `main.js` or `main.
 ```typescript
 import { createApp } from "vue";
 import App from "./App.vue";
-import { aliases, mdi as mdiSvg } from 'vuetify/iconsets/mdi-svg'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
@@ -47,11 +46,6 @@ const app = createApp(App)
 const vuetify = createVuetify({
   components,
   directives,
-  icons: {
-    defaultSet: 'mdi',
-    aliases,
-    sets: { mdi: mdiSvg },
-  },
 })
 
 app.use(vuetify)
@@ -96,14 +90,4 @@ const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
     :show-duration="true"
   />
 </template>
-```
-
-## TypeScript Support
-
-Playerify includes TypeScript definitions. Import types directly:
-
-```typescript
-import PlayerifyPlugin, { PlayerType } from 'playerify'
-
-// PlayerType enum: PlayerType.AUDIO or PlayerType.VIDEO
 ```

@@ -3,6 +3,102 @@
   max-width: 960px;
 }
 
+/* Force Vuetify to use VitePress theme colors */
+.v-application,
+.v-card,
+.v-sheet {
+  background-color: var(--vp-c-bg) !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+.v-card {
+  background-color: transparent !important;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.v-field__input {
+  background-color: var(--vp-c-bg-soft) !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+.v-select .v-field {
+  background-color: var(--vp-c-bg-soft) !important;
+}
+
+.v-label,
+.v-field-label,
+.v-card-title,
+.v-card-text {
+  color: var(--vp-c-text-1) !important;
+}
+
+.v-input__details,
+.v-counter {
+  color: var(--vp-c-text-2) !important;
+}
+
+/* Fix select dropdown menu */
+.v-overlay__content,
+.v-menu__content,
+.v-select__content {
+  background-color: var(--vp-c-bg) !important;
+  border: 1px solid var(--vp-c-divider) !important;
+}
+
+.v-list {
+  background-color: var(--vp-c-bg) !important;
+}
+
+.v-list-item,
+.v-list-item-title,
+.v-list-item-subtitle {
+  color: var(--vp-c-text-1) !important;
+}
+
+.v-list-item:hover {
+  background-color: var(--vp-c-bg-soft) !important;
+}
+
+.v-list-item--active {
+  background-color: var(--vp-c-bg-soft) !important;
+}
+
+.v-list-item--active .v-list-item-title {
+  color: var(--vp-c-brand-1) !important;
+}
+
+/* Fix switch colors */
+.v-switch .v-label {
+  color: var(--vp-c-text-1) !important;
+}
+
+/* Fix divider */
+.v-divider {
+  border-color: var(--vp-c-divider) !important;
+}
+
+/* Fix code block */
+.v-code {
+  background-color: var(--vp-c-bg) !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+/* Fix buttons */
+.v-btn {
+  background-color: var(--vp-c-bg-soft) !important;
+  color: var(--vp-c-text-1) !important;
+}
+
+/* Fix slider */
+.v-slider-track__background {
+  background-color: var(--vp-c-divider) !important;
+}
+
+/* Fix switch track */
+.v-switch .v-switch__track {
+  background-color: var(--vp-c-divider) !important;
+}
+
 .custom-block.playground {
   background-color: #f6f8fa;
   border-color: #0969da;
@@ -61,6 +157,26 @@
   border-color: var(--vp-c-text-1);
 }
 
+.hero-section .btn-primary {
+  background: var(--vp-c-brand-1) !important;
+  color: #fff !important;
+}
+
+.hero-section .btn-primary:hover {
+  background: var(--vp-c-brand-2) !important;
+}
+
+.hero-section .btn-outline {
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-1) !important;
+  background: transparent !important;
+}
+
+.hero-section .btn-outline:hover {
+  border-color: var(--vp-c-text-1);
+  color: var(--vp-c-text-1) !important;
+}
+
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -85,4 +201,88 @@
   color: var(--vp-c-text-2);
   font-size: 0.95rem;
   margin: 0;
+}
+
+/* Playground page */
+.playground {
+  padding: 1rem;
+}
+
+.playground-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .playground-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.player-section, .controls-section {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.player-section h3, .controls-section h3, .code-section h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.player-preview {
+  min-height: 100px;
+}
+
+.checkbox-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  margin-right: 0.5rem;
+}
+
+.control-group {
+  margin-bottom: 1rem;
+}
+
+.control-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: var(--vp-c-text-2);
+}
+
+.control-group select,
+.control-group input[type="text"],
+.control-group input[type="range"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+
+.control-group input[type="range"] {
+  padding: 0;
+}
+
+.code-section {
+  margin-top: 2rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.code-section pre {
+  background: var(--vp-c-bg);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
 }

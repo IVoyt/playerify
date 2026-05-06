@@ -25,14 +25,6 @@
   </div>
 </div>
 
-## Quick Install
+## Credits
 
-```bash
-# npm
-npm i playerify
-
-# or pnpm
-pnpm i playerify
-```
-
-[Get Started →](./getting-started)
+Playerify is inspired and built using [`useMediaControls`](https://vueuse.org/core/usemediacontrols/) from [VueUse](https://vueuse.org/) for media state management.
