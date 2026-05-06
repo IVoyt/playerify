@@ -29,11 +29,11 @@ jobs:
       - name: Install dependencies
         run: |
           rm -rf node_modules docs/node_modules docs/.vitepress/cache
-          pnpm install --frozen-lockfile
-#        working-directory: docs
+          pnpm install
+        working-directory: docs
       - name: Build
         run: pnpm docs:build
-#        working-directory: docs
+        working-directory: docs
       - id: pages
         uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
