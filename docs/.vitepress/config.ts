@@ -12,9 +12,6 @@ export default defineConfig({
   vite: {
     build: {
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        external: ['@vueuse/core', 'yaml'],
-      },
     },
     resolve: {
       alias: {
@@ -22,7 +19,7 @@ export default defineConfig({
       },
     },
     ssr: {
-      noExternal: ['vuetify', '@vueuse/core'],
+      noExternal: ['vuetify'/*, '@vueuse/core'*/],
     },
     optimizeDeps: {
       include: ['vuetify', '@vueuse/core'],
