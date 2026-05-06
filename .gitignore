@@ -4,3 +4,6 @@ dist/
 .idea/
 .serena/
 .worktrees/
+
+# Worktrees
+.worktrees
