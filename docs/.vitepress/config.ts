@@ -16,7 +16,7 @@ export default defineConfig({
       },
     },
     ssr: {
-      noExternal: ['vuetify'],
+      noExternal: ['vuetify', '@vueuse/core'],
     },
     optimizeDeps: {
       include: ['vuetify', '@vueuse/core'],
