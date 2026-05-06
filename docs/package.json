@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "sass-embedded": "^1.98.0",
-    "vite": "^8.0.10",
-    "vitepress": "^1.6.4"
+    "vitepress": "next"
   }
 }
