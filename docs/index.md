@@ -6,7 +6,7 @@
     <p class="text-h5 mb-8">A lightweight, customizable media player component built with Vue 3 and Vuetify.</p>
 
     <div class="mb-8">
-      <VBtn color="primary" size="large" href="/getting-started" class="mr-4">Get Started</VBtn>
+      <VBtn color="primary" size="large" href="./getting-started" class="mr-4">Get Started</VBtn>
       <VBtn variant="outlined" size="large" href="https://github.com/IVoyt/playerify" target="_blank">GitHub</VBtn>
     </div>
 
@@ -45,4 +45,4 @@ npm i playerify
 pnpm i playerify
 ```
 
-[Get Started →](/getting-started)
+[Get Started →](./getting-started)

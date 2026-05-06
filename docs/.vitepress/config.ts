@@ -8,9 +8,32 @@ export default defineConfig({
   lang: 'en-US',
 
   vite: {
+    build: {
+      rollupOptions: {
+        external: [/vuetify/],
+      },
+    },
     resolve: {
       alias: {
         '@playerify': fileURLToPath(new URL('../../src', import.meta.url)),
+      },
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
+    },
+    optimizeDeps: {
+      include: ['vuetify'],
+    },
+  },
+
+  builder: {
+    vite: {
+      build: {
+        ssr: false,
       },
     },
   },
