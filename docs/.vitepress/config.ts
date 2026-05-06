@@ -10,6 +10,9 @@ export default defineConfig({
   lang: 'en-US',
 
   vite: {
+    build: {
+      chunkSizeWarningLimit: 1000,
+    },
     resolve: {
       alias: {
         '@playerify': fileURLToPath(new URL('../../src', import.meta.url)),
