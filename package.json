@@ -31,9 +31,9 @@
     "build": "vite build",
     "lint": "eslint src --fix --ext .ts,.js,.cjs,.vue,.tsx,.jsx",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:dev": "pnpm --filter tiptapify-docs docs:dev",
-    "docs:build": "pnpm --filter tiptapify-docs docs:build",
-    "docs:preview": "pnpm --filter tiptapify-docs docs:preview"
+    "docs:dev": "pnpm --filter playerify-docs docs:dev",
+    "docs:build": "pnpm --filter playerify-docs docs:build",
+    "docs:preview": "pnpm --filter playerify-docs docs:preview"
   },
   "keywords": [
     "vue",
@@ -48,7 +48,7 @@
   ],
   "author": "Igor Voytovich",
   "license": "MIT",
-  "repository": "https://github.com/IVoyt/tiptapify",
+  "repository": "https://github.com/IVoyt/playerify",
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
     "@vueuse/core": "^14.3.0",
