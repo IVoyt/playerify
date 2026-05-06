@@ -6,7 +6,6 @@ import './style.css'
 export default {
   ...Theme,
   enhanceApp({ app }) {
-    Theme.enhanceApp?.(...arguments)
     app.use(PlayerifyPlugin)
     app.component('PlaygroundDemo', PlaygroundDemo)
   },
