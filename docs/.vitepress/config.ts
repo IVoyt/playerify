@@ -13,7 +13,7 @@ export default defineConfig({
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
-        external: ['@vueuse/core'],
+        external: ['@vueuse/core', 'yaml'],
       },
     },
     resolve: {
