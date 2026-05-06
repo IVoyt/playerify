@@ -1,0 +1,9 @@
+/* Custom styles for Playerify docs */
+.vp-doc {
+  max-width: 960px;
+}
+
+.custom-block.playground {
+  background-color: #f6f8fa;
+  border-color: #0969da;
+}

@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitepress'
-import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
@@ -9,7 +8,6 @@ export default defineConfig({
   lang: 'en-US',
 
   vite: {
-    plugins: [vue()],
     resolve: {
       alias: {
         '@playerify': fileURLToPath(new URL('../../src', import.meta.url)),
