@@ -28,7 +28,7 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-        working-directory: docs
+        # working-directory: docs
       - run: pnpm docs:build
       - id: pages
         uses: actions/configure-pages@v5
