@@ -33,7 +33,7 @@ jobs:
 #        working-directory: docs
       - name: Build
         run: pnpm docs:build
-        working-directory: docs
+#        working-directory: docs
       - id: pages
         uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
