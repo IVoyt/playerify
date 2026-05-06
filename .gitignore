@@ -1,0 +1,6 @@
+docs/superpowers/
+node_modules/
+dist/
+.idea/
+.serena/
+.worktrees/
