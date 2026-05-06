@@ -88,6 +88,10 @@ app.mount('#app')
 </template>
 ```
 
+## Credits
+
+Playerify is inspired and built using [`useMediaControls`](https://vueuse.org/core/usemediacontrols/) from [VueUse](https://vueuse.org/) for media state management.
+
 ## Feedback
 Found a bug or have ideas on improvement? Feel free to [create a ticket](https://github.com/IVoyt/playerify/issues/new).
 

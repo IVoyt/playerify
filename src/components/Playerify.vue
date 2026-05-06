@@ -8,8 +8,7 @@ import YAML from 'yaml'
 
 const props = defineProps({
   src: { type: String, required: true },
-  type: { type: String },
-  mimeType: { type: String },
+  type: { type: String, default () { return PlayerType.VIDEO } },
   videoWidth: { type: String, default () { return '100%' } },
   videoHeight: { type: String, default () { return '' } },
   playButtonColor: { type: String, default () { return 'default' } },
