@@ -8,8 +8,12 @@ The main media player component.
 
 | Prop | Type | Default     | Description |
 |------|------|-------------|-------------|
-| src | String (required) | -           | Media source URL |
+| playlist | string[] \| PlaylistItem[] | []      | Array of playlist items - either URLs (string[]) or objects |
 | type | String | 'video'     | 'audio' or 'video' |
+| playlist | Array | []          | Array of playlist items |
+| showPlaylist | Boolean | false      | Show playlist panel |
+| playlistVariant | String | 'elevated'  | Playlist variant (text, flat, elevated, tonal, outlined) |
+| playlistButtonColor | String | 'default'   | Vuetify color for playlist button |
 | videoWidth | String | '100%'      | Video width |
 | videoHeight | String | ''          | Video height |
 | playButtonColor | String | 'default'   | Vuetify color for play button |
@@ -33,9 +37,26 @@ The main media player component.
 | permanentVolumeSlider | Boolean | true        | Always show volume slider |
 | debug | Boolean | false       | Show debug YAML output |
 
-### Events
+### Playlist Item Type
 
-The component uses `v-model` patterns for reactive state. Use `useMediaControls` from `@vueuse/core` for programmatic control.
+Import the type from the package:
+
+```typescript
+import type { PlaylistItem } from 'playerify'
+
+const playlist: PlaylistItem[] = [
+  { src: 'https://example.com/audio.mp3', name: 'Audio' },
+  { src: 'https://example.com/video.mp4', name: 'Video' },
+]
+```
+
+You can also use a simple array of URLs:
+```typescript
+const playlist: string[] = [
+  'https://example.com/audio.mp3',
+  'https://example.com/video.mp4',
+]
+```
 
 ## PlayerType Enum
 

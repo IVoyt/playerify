@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'Playerify',
   description: 'Audio/Video player for Vuetify 3',
   cleanUrls: true,
-  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  head: [['link', { rel: 'icon', href: '/playerify/favicon.svg' }]],
   base: '/playerify/',
   lang: 'en-US',
 

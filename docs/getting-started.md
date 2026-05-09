@@ -18,12 +18,12 @@ Playerify requires the following peer dependencies:
 
 - Vue 3.x
 - Vuetify 3.x or 4.x
-- @mdi/js 7.x (for icons)
+
 
 Install them if you haven't already:
 
 ```bash
-pnpm i vue vuetify @mdi/js
+pnpm i vue vuetify
 ```
 
 ## Plugin Registration
@@ -60,13 +60,14 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/horse.mp3'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' }
+]
 </script>
 
 <template>
   <Playerify
-    :src="src"
-    type="audio"
+    :playlist="playlist"
     :show-file-name="true"
     :show-duration="true"
   />
@@ -77,13 +78,14 @@ const src = 'https://www.w3schools.com/tags/horse.mp3'
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny' }
+]
 </script>
 
 <template>
   <Playerify
-    :src="src"
-    type="video"
+    :playlist="playlist"
     video-width="320"
     video-height="200"
     :show-file-name="true"
@@ -91,3 +93,48 @@ const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
   />
 </template>
 ```
+
+### Playlist
+
+The `playlist` prop accepts both simple string URLs and playlist item objects:
+
+**Simple URLs (auto-named):**
+```vue
+<script setup lang="ts">
+const playlist = [
+  'https://example.com/audio1.mp3',
+  'https://example.com/audio2.mp3',
+]
+</script>
+
+<template>
+  <Playerify :playlist="playlist" />
+</template>
+```
+
+**Full objects (with custom properties):**
+```vue
+<script setup lang="ts">
+const playlist = [
+  { src: 'https://example.com/audio1.mp3', name: 'Track 1' },
+  { src: 'https://example.com/audio2.mp3', name: 'Track 2' },
+  { src: 'https://example.com/video.mp4', name: 'Video' },
+]
+</script>
+
+<template>
+  <Playerify
+    :playlist="playlist"
+    :show-playlist="true"
+    playlist-variant="elevated"
+    playlist-button-color="primary"
+  />
+</template>
+```
+
+#### Playlist Item Properties
+
+| Property   | Type   | Description                              |
+|------------|--------|------------------------------------------|
+| `src`      | string | Media source URL (required)             |
+| `name`     | string | Display name (optional, auto-generated) |

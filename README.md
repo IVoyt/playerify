@@ -1,104 +1,97 @@
 # Playerify
 
----
+Audio/Video player for [Vuetify 3](https://vuetifyjs.com)
 
-Audio/Video player for [Vuetify3](https://vuetifyjs.com)
+[![npm](https://img.shields.io/npm/v/playerify.svg)](https://www.npmjs.com/package/playerify)
+[![npm](https://img.shields.io/npm/dw/playerify.svg)](https://www.npmjs.com/package/playerify)
+[![GitHub](https://img.shields.io/github/license/ivoyt/playerify)](./LICENSE)
 
-## Status
-*Beta*
+## Live Demo
+
+[View Documentation & Demo](https://playerify.ligamedia.dev)
 
 ## Requirements
+
 - Vue 3.x
-- Vuetify.js 3.x
+- Vuetify 3.x or 4.x
 
-## Features
-- Vuetify components
-- Audio/Video Playback
-- Playback Progress
-- Playback Speed
-- Playback Loop
-- Volume control
-- Control buttons customization (color, rounded)
 
-## Installation
-Install package
+## Quick Start
+
 ```bash
-# npm
 npm i playerify
-
-# or pnpm
-pnpm i playerify
 ```
 
-Register the plugin in your main.js (main.ts)
 ```typescript
+// main.ts
 import PlayerifyPlugin from 'playerify'
 import 'playerify/style.css'
-app.use(PlayerifyPlugin);
+app.use(PlayerifyPlugin)
 ```
-Should be something like this
-
-```typescript
-import { createApp } from "vue";
-import App from "./App.vue";
-import { aliases, mdi as mdiSvg } from 'vuetify/iconsets/mdi-svg'
-
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-
-const app = createApp(App)
-
-const vuetify = createVuetify({
-  components,
-  directives
-})
-
-app.use(vuetify);
-
-// add this line
-import PlayerifyPlugin from 'playerify';
-import 'playerify/style.css';
-app.use(PlayerifyPlugin);
-
-// Mount vue app
-app.mount('#app')
-```
-
-## Usage
 
 ```vue
-<script setup lang="ts">
-  const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
-</script>
-
-<template>
-  <Playerify
-      :src="src"
-      type="video"
-      video-width="320"
-      video-height="200"
-      :show-file-name="true"
-      :show-duration="true"
-      play-button-color="green"
-      volume-off-button-color="red"
-      playback-rate-button-color="blue"
-  />
-</template>
+<!-- App.vue -->
+<Playerify :src="src" type="video" />
 ```
+
+## Features
+
+- Audio & Video playback
+- Progress tracking & seeking
+- Playback speed control
+- Volume control
+- Loop mode
+- Customizable button colors & rounded styles
+- Fullscreen support
+- TypeScript support
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | — | Media URL |
+| `type` | `'audio' \| 'video'` | `'audio'` | Media type |
+| `video-width` | `string` | — | Video player width |
+| `video-height` | `string` | — | Video player height |
+| `play-button-color` | `string` | `'primary'` | Play button color |
+| `pause-button-color` | `string` | `'primary'` | Pause button color |
+| `volume-button-color` | `string` | — | Volume icon button color |
+| `volume-off-button-color` | `string` | — | Mute icon button color |
+| `playback-rate-button-color` | `string` | — | Speed button color |
+| `settings-button-color` | `string` | — | Settings button color |
+| `fullscreen-button-color` | `string` | — | Fullscreen button color |
+| `progress-slider-color` | `string` | `'primary'` | Progress bar color |
+| `volume-slider-color` | `string` | `'secondary'` | Volume slider color |
+| `progress-color` | `string` | — | Played progress color |
+| `buffer-color` | `string` | — | Buffered range color |
+| `btn-rounded` | `string` | — | Button border radius |
+| `progress-rounded` | `string` | — | Progress bar border radius |
+| `default-rewind` | `number` | `10` | Rewind seconds |
+| `default-volume` | `number` | `1` | Default volume |
+| `show-file-name` | `boolean` | `false` | Show file name |
+| `show-duration` | `boolean` | `false` | Show duration |
+| `permanent-volume-slider` | `boolean` | `false` | Always show volume slider |
+| `debug` | `boolean` | `false` | Enable debug logging |
+
+## Full Documentation
+
+See the [full documentation](https://playerify.ligamedia.dev) for installation, examples, and API reference.
 
 ## Credits
 
-Playerify is inspired and built using [`useMediaControls`](https://vueuse.org/core/usemediacontrols/) from [VueUse](https://vueuse.org/) for media state management.
+Playerify is built using [`useMediaControls`](https://vueuse.org/core/usemediacontrols/) from [VueUse](https://vueuse.org/) for media state management.
 
 ## Feedback
-Found a bug or have ideas on improvement? Feel free to [create a ticket](https://github.com/IVoyt/playerify/issues/new).
+
+Found a bug or have ideas? [Create an issue](https://github.com/IVoyt/playerify/issues/new).
 
 ## TODO
-* [ ] replace default fullscreen UI
+
+* [x] playlist
+* [ ] replace the default fullscreen UI
 * [ ] customizable control buttons
 * [ ] cover image
 
-## Licence
+## License
+
 [MIT](./LICENSE)
