@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import BaseControls from "@playerify/components/BaseControls.vue";
+import BaseControls from '@playerify/components/BaseControls.vue'
 import ExtraControls from '@playerify/components/ExtraControls.vue'
 import Playlist from '@playerify/components/Playlist.vue'
-import Progress from "@playerify/components/Progress.vue";
+import Progress from '@playerify/components/Progress.vue'
 import { useMediaControls, UseMediaControlsReturn } from '@vueuse/core'
 import { computed, reactive, Ref, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import { PlayerType } from '@playerify/enums'
@@ -32,7 +32,6 @@ const props = defineProps({
   defaultVolume: { type: Number, default: 0.8 },
   progressColor: { type: String, default: 'primary' },
   bufferColor: { type: String, default: 'secondary' },
-  fileName: { type: String, default: '' },
   showFileName: { type: Boolean, default: true },
   showDuration: { type: Boolean, default: true },
   permanentVolumeSlider: { type: Boolean, default: true },
@@ -108,9 +107,7 @@ controls.value.error = 'No src or playlist provided'
 
 watch(() => currentMedia.value, () => {
   if (media.value !== null) {
-    // delete controls.value.error
-
-    const { error, ...rest} = controls.value
+    const { error, ...rest } = controls.value
 
     controls.value = rest
   }
@@ -140,11 +137,10 @@ watch(() => currentMedia.value, () => {
   if (currentMedia.value) {
     loadSrc()
   }
-}, { deep: true, immediate: true })
+}, { deep: true })
 </script>
 
 <template>
-
   <div class="outline-none" :tabindex="0">
     <VCard>
       <VCardText
@@ -233,7 +229,7 @@ watch(() => currentMedia.value, () => {
         </div>
 
         <div v-if="showPlaylist" class="mt-3">
-          <Playlist v-model:media="currentMedia" :playlist="playList" v-model:open-playlist="openPlaylist" :playlist-variant="playlistVariant" />
+          <Playlist v-model:media="currentMedia" v-model:open-playlist="openPlaylist" :playlist="playList" :playlist-variant="playlistVariant" />
         </div>
 
         <pre v-if="debug" class="code-block" lang="yaml">{{ text }}</pre>
