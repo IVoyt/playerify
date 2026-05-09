@@ -1,6 +1,6 @@
-import { PlaylistItem, PlaylistItemInternal } from "@playerify/types";
+import { PlaylistItem, PlaylistItemInternal } from '@playerify/types'
 import { reactify } from '@vueuse/core'
-import { Ref, ref } from "vue";
+import { Ref, ref } from 'vue'
 import YAML from 'yaml'
 
 const getFileNameFromSrc = (src: string): string|undefined => {

@@ -61,6 +61,7 @@
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^11.1.1",
     "@rollup/plugin-alias": "^5.1.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^22.19.15",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vitejs/plugin-vue-jsx": "^5.1.5",
