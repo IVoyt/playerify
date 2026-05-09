@@ -3,8 +3,12 @@ import { defineProps, ref, watch } from 'vue'
 
 const media = defineModel('media')
 const loop = defineModel('loop')
+const openPlaylist = defineModel('openPlaylist')
 
 const props = defineProps({
+  showPlaylist: { type: Boolean, default () { return false } },
+  disabled: { type: Boolean, default () { return false } },
+  playlistButtonColor: { type: String, default () { return 'default' } },
   playbackRateButtonColor: { type: String, default () { return 'default' } },
   settingsButtonColor: { type: String, default () { return 'default' } },
   fullscreenButtonColor: { type: String, default () { return 'default' } },
@@ -84,9 +88,15 @@ watch(() => playbackRate.value, () => {
 </script>
 
 <template>
+  <VBtn v-if="showPlaylist" :disabled="disabled" size="32" class="ml-3" @click="openPlaylist = !openPlaylist">
+    <VIcon>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17a3 3 0 1 0 6 0a3 3 0 1 0-6 0m6 0V4h4m-8 1H3m0 4h10m-4 4H3"/></svg>
+    </VIcon>
+  </VBtn>
   <VBtn
     v-for="group in groups"
     :key="group.name"
+    :disabled="disabled"
     :text="group.name"
     :color="group.btnColor"
     :rounded="btnRounded"
@@ -115,6 +125,7 @@ watch(() => playbackRate.value, () => {
       density="compact"
       rounded="lg"
       border
+      :lines="false"
       @mouseenter="onListEnter()"
       @mouseleave="delayedClose()"
     >

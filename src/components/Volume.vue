@@ -7,6 +7,7 @@ const volume = defineModel('volume')
 const muted = defineModel('muted')
 
 defineProps({
+  disabled: { type: Boolean, default () { return false } },
   volumeButtonColor: { type: String, default () { return 'default' } },
   volumeOffButtonColor: { type: String, default () { return 'default' } },
   btnRounded: { type: String, default () { return 'sm' } },
@@ -34,6 +35,7 @@ watch(() => muted.value, () => {
   <template v-if="permanentVolumeSlider">
     <VolumeButton
       v-model:muted="muted"
+      :disabled="disabled"
       :btn-rounded="btnRounded"
       :volume-button-color="volumeButtonColor"
       :volume-off-button-color="volumeOffButtonColor"
@@ -42,10 +44,10 @@ watch(() => muted.value, () => {
   </template>
 
   <VMenu v-else open-on-hover :close-on-content-click="false" transition="slide-x-transition" location="end">
-    <!--  <VMenu v-else persistent :close-on-content-click="false" transition="slide-x-transition" location="end">-->
     <template #activator="{ props }">
       <VolumeButton
         v-model:muted="muted"
+        :disabled="disabled"
         :btn-rounded="btnRounded"
         :volume-button-color="volumeButtonColor"
         :volume-off-button-color="volumeOffButtonColor"
@@ -53,8 +55,8 @@ watch(() => muted.value, () => {
       />
     </template>
 
-    <VCard min-width="200" width="100%" class="ml-3">
+    <div style="min-width: 200px; width: 100%" class="ml-3">
       <VolumeSlider v-model:volume="volume" style="margin: 0 10px" />
-    </VCard>
+    </div>
   </VMenu>
 </template>

@@ -1,37 +1,50 @@
 <script setup lang="ts">
-import ExtraActions from '@playerify/components/ExtraActions.vue'
-import Volume from '@playerify/components/Volume.vue'
-import { reactify, useMediaControls } from '@vueuse/core'
-import { computed, defineProps, reactive, shallowRef, useTemplateRef } from 'vue'
+import BaseControls from '@playerify/components/BaseControls.vue'
+import ExtraControls from '@playerify/components/ExtraControls.vue'
+import Playlist from '@playerify/components/Playlist.vue'
+import Progress from '@playerify/components/Progress.vue'
+import { useMediaControls, UseMediaControlsReturn } from '@vueuse/core'
+import { computed, reactive, Ref, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import { PlayerType } from '@playerify/enums'
-import YAML from 'yaml'
+import { PlaylistItem, PlaylistItemInternal } from '@playerify/types'
+import { isFloat, stringify, processPlaylist } from '@playerify/utils'
 
 const props = defineProps({
-  src: { type: String, required: true },
-  type: { type: String, default () { return PlayerType.VIDEO } },
-  videoWidth: { type: String, default () { return '100%' } },
-  videoHeight: { type: String, default () { return '' } },
-  playButtonColor: { type: String, default () { return 'default' } },
-  pauseButtonColor: { type: String, default () { return 'default' } },
-  volumeButtonColor: { type: String, default () { return 'default' } },
-  volumeOffButtonColor: { type: String, default () { return 'default' } },
-  playbackRateButtonColor: { type: String, default () { return 'default' } },
-  settingsButtonColor: { type: String, default () { return 'default' } },
-  fullscreenButtonColor: { type: String, default () { return 'default' } },
-  btnRounded: { type: String, default () { return 'sm' } },
-  progressRounded: { type: String, default () { return 'sm' } },
-  progressSliderColor: { type: String, default () { return 'primary' } },
-  volumeSliderColor: { type: String, default () { return 'primary' } },
-  defaultRewind: { type: Number, default () { return 10 } },
-  defaultVolume: { type: Number, default () { return 0.8 } },
-  progressColor: { type: String, default () { return 'primary' } },
-  bufferColor: { type: String, default () { return 'secondary' } },
-  fileName: { type: String, default () { return '' } },
-  showFileName: { type: Boolean, default () { return true } },
-  showDuration: { type: Boolean, default () { return true } },
-  permanentVolumeSlider: { type: Boolean, default () { return true } },
-  debug: { type: Boolean, default () { return false } },
+  type: { validator: (value: PlayerType) => Object.values(PlayerType).includes(value) },
+  showPlaylist: { type: Boolean, default: false },
+  playlist: { type: Array<string|PlaylistItem>, default: () => [] },
+  playlistVariant: { type: String, default: 'elevated' },
+  playlistButtonColor: { type: String, default: 'default' },
+  videoWidth: { type: String, default: '100%' },
+  videoHeight: { type: String, default: '' },
+  playButtonColor: { type: String, default: 'default' },
+  pauseButtonColor: { type: String, default: 'default' },
+  volumeButtonColor: { type: String, default: 'default' },
+  volumeOffButtonColor: { type: String, default: 'default' },
+  playbackRateButtonColor: { type: String, default: 'default' },
+  settingsButtonColor: { type: String, default: 'default' },
+  fullscreenButtonColor: { type: String, default: 'default' },
+  btnRounded: { type: String, default: 'sm' },
+  progressRounded: { type: String, default: 'sm' },
+  progressSliderColor: { type: String, default: 'primary' },
+  volumeSliderColor: { type: String, default: 'primary' },
+  defaultRewind: { type: Number, default: 10, validator: (value: number) => value > 0 && value <= 60 },
+  defaultVolume: { type: Number, default: 0.8 },
+  progressColor: { type: String, default: 'primary' },
+  bufferColor: { type: String, default: 'secondary' },
+  showFileName: { type: Boolean, default: true },
+  showDuration: { type: Boolean, default: true },
+  permanentVolumeSlider: { type: Boolean, default: true },
+  debug: { type: Boolean, default: false },
 })
+
+const openPlaylist = ref(props.showPlaylist)
+
+const defaultType = ref(props.type)
+
+const currentFileName = ref('')
+const currentMedia: Ref<PlaylistItemInternal|null> = ref(null)
+const currentType = ref(defaultType.value || 'audio')
 
 const defaultVolume = computed(() => {
   if (props.defaultVolume > 1) {
@@ -59,51 +72,57 @@ const defaultRewind = computed(() => {
   return value
 })
 
-function isFloat(n: number|string) {
-  return typeof n === 'number' && !Number.isNaN(n) && !Number.isInteger(n)
-}
-
-const computedFileName = computed(() => props.fileName || props.src.split('/').at(-1))
-
-const stringify = reactify(
-    (input: any) => YAML.stringify(input, (k, v) => {
-      if (typeof v === 'function') {
-        return undefined
-      }
-      return v
-    }, {
-      singleQuote: true,
-      flowCollectionPadding: false,
-    }),
-)
-
 const media = useTemplateRef('media')
 const loop = shallowRef(false)
 
-const controls = useMediaControls(media, {
-  src: {
-    src: props.src
-  },
-})
+function loadSrc () {
+  const newControls = useMediaControls(media, {
+    src: currentMedia.value?.src
+  })
 
-const {
-  playing,
-  buffered,
-  currentTime,
-  duration,
-  waiting,
-  volume,
-  muted,
-} = controls
-const text = stringify(reactive(controls))
-volume.value = defaultVolume.value
-const endBuffer = computed(() => buffered.value.length > 0 ? buffered.value[buffered.value.length - 1][1] : 0)
-function formatDuration(seconds: number) {
-  return new Date(1000 * seconds).toISOString().slice(14, 19)
+  // Copy all properties but keep error handling
+  Object.assign(controls.value, newControls)
+
+  currentFileName.value = currentMedia.value?.name || ''
+
+  if (typeof defaultType.value === 'undefined') {
+    currentType.value = currentMedia.value?.type || ''
+  }
 }
 
+const controls: Ref<UseMediaControlsReturn> = ref({ error: '', ...useMediaControls(media) })
+const text = computed(() => stringify(reactive(controls.value)))
+
+const playerControls = ref(controls.value)
+playerControls.value.waiting = true
+playerControls.value.volume = defaultVolume.value
+
+const endBuffer = computed(() => {
+  return playerControls.value.buffered.length > 0
+      ? playerControls.value.buffered[playerControls.value.buffered.length - 1][1]
+      : 0
+})
+
+controls.value.error = 'No src or playlist provided'
+
+watch(() => currentMedia.value, () => {
+  if (media.value !== null) {
+    const { error, ...rest } = controls.value
+
+    controls.value = rest
+  }
+}, { deep: true })
+
+const playList: Ref<PlaylistItemInternal[]> = ref([])
+watch(() => props.playlist, () => {
+  playList.value = processPlaylist(props.playlist)
+  if (playList.value.length) {
+    currentMedia.value = playList.value[0]
+  }
+}, { deep: true, immediate: true })
+
 function toggleFullscreen () {
-  if (props.type !== PlayerType.VIDEO) {
+  if (currentType.value !== PlayerType.VIDEO) {
     return
   }
 
@@ -113,145 +132,113 @@ function toggleFullscreen () {
     document.exitFullscreen?.()
   }
 }
+
+watch(() => currentMedia.value, () => {
+  if (currentMedia.value) {
+    loadSrc()
+  }
+}, { deep: true })
 </script>
 
 <template>
-  <div
-    class="outline-none"
-    :tabindex="0"
-    autofocus
-    @keydown.prevent.space="playing = !playing"
-    @keydown.right="currentTime += defaultRewind"
-    @keydown.left="currentTime -= defaultRewind"
-  >
-    <div class="mt-5 relative rounded-md shadow overflow-hidden text-center">
-      <template v-if="type === PlayerType.AUDIO">
-        <audio
-          ref="media"
-          class="w-full block"
-          :loop="loop"
-          @click="playing = !playing"
-        />
-      </template>
-      <template v-else>
-        <video
-          ref="media"
-          class="w-full block"
-          :width="videoWidth"
-          :height="videoHeight"
-          :loop="loop"
-          @click="playing = !playing"
-        />
-      </template>
-      <div v-if="showFileName">
-        {{ computedFileName }}
-      </div>
-      <!--      <div>-->
-      <!--        Unable to load src-->
-      <!--      </div>-->
-    </div>
-
-    <div class="w-100 d-flex align-center">
-      <div class="slider-buffer-container">
-        <VSlider
-          v-model="currentTime"
-          :color="progressSliderColor"
-          min="0"
-          :max="duration"
-          :hide-details="true"
-          track-color="transparent"
-          :thumb-label="showDuration ? false : 'always'"
-          class="play-slider"
-        >
-          <template #thumb-label="{ modelValue }">
-            {{ formatDuration(modelValue) }}
-          </template>
-        </VSlider>
-
-        <VProgressLinear
-          v-model="currentTime"
-          :buffer-value="endBuffer"
-          :color="progressColor"
-          :buffer-color="bufferColor"
-          :max="duration"
-          :indeterminate="waiting"
-          :rounded="progressRounded"
-          height="6"
-          class="buffer-bar"
-        />
-      </div>
-
-      <span v-if="showDuration" class="media-progress-duration">{{ formatDuration(currentTime) }} / {{ formatDuration(duration) }}</span>
-    </div>
-
-    <div class="d-flex flex-row">
-      <VBtn size="32" :color="playing ? pauseButtonColor : playButtonColor" :rounded="btnRounded" @click="playing = !playing">
-        <VIcon>
-          <template v-if="playing">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g class="icon-tabler" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="16" rx="2" /><rect x="14" y="4" width="6" height="16" rx="2" /></g></svg>
+  <div class="outline-none" :tabindex="0">
+    <VCard>
+      <VCardText
+        @keydown.prevent.space="playerControls.playing = !playerControls.playing"
+        @keydown.right="playerControls.currentTime += defaultRewind"
+        @keydown.left="playerControls.currentTime -= defaultRewind"
+      >
+        <div v-if="!currentMedia || currentMedia.src === ''" class="d-flex">
+          <VProgressCircular indeterminate width="1" color="primary ma-auto" />
+        </div>
+        <div v-else class="mt-5 relative rounded-md shadow overflow-hidden text-center">
+          <template v-if="currentType === PlayerType.AUDIO">
+            <audio
+              ref="media"
+              :key="currentMedia.src"
+              class="w-full block"
+              :loop="loop"
+              @click="playerControls.playing = !playerControls.playing"
+            />
           </template>
           <template v-else>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5 5v14a2 2 0 0 0 2.75 1.84L20 13.74a2 2 0 0 0 0-3.5L7.75 3.14A2 2 0 0 0 5 4.89" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <video
+              ref="media"
+              :key="currentMedia.src"
+              class="w-full block"
+              :width="videoWidth"
+              :height="videoHeight"
+              :loop="loop"
+              @click="playerControls.playing = !playerControls.playing"
+            />
           </template>
-        </VIcon>
-      </VBtn>
-      <Volume
-        v-model:volume="volume"
-        v-model:muted="muted"
-        :volume-button-color="volumeButtonColor"
-        :volume-off-button-color="volumeOffButtonColor"
-        :volume-slider-color="volumeSliderColor"
-        :btn-rounded="btnRounded"
-        :permanent-volume-slider="permanentVolumeSlider"
-      />
+          <div v-if="showFileName">
+            {{ currentFileName }}
+          </div>
+          <!--      <div>-->
+          <!--        Unable to load src-->
+          <!--      </div>-->
+        </div>
 
-      <div class="ml-auto extra-actions">
-        <ExtraActions
-          v-model:media="media"
-          v-model:loop="loop"
-          :btn-rounded="btnRounded"
-          :playback-rate-button-color="playbackRateButtonColor"
-          :settings-button-color="settingsButtonColor"
-          :fullscreen-button-color="fullscreenButtonColor"
-          :is-video="type === PlayerType.VIDEO"
-          @toggle-fullscreen="toggleFullscreen"
-        />
-      </div>
-    </div>
+        <div class="w-100 d-flex align-center">
+          <Progress
+            v-model:current-time="playerControls.currentTime"
+            :disabled="media === null"
+            :end-buffer="endBuffer"
+            :duration="playerControls.duration"
+            :waiting="playerControls?.waiting ?? true"
+            :progress-rounded="progressRounded"
+            :progress-slider-color="progressSliderColor"
+            :progress-color="progressColor"
+            :buffer-color="bufferColor"
+            :show-duration="showDuration"
+          />
+        </div>
+
+        <div class="d-flex flex-row">
+          <BaseControls
+            v-model:playing="playerControls.playing"
+            v-model:volume="playerControls.volume"
+            v-model:muted="playerControls.muted"
+            :disabled="media === null"
+            :btn-rounded="btnRounded"
+            :play-button-color="playButtonColor"
+            :pause-button-color="pauseButtonColor"
+            :volume-button-color="volumeButtonColor"
+            :volume-off-button-color="volumeOffButtonColor"
+            :volume-slider-color="volumeSliderColor"
+            :permanent-volume-slider="permanentVolumeSlider"
+          />
+
+          <div class="ml-auto extra-actions">
+            <ExtraControls
+              v-model:media="media"
+              v-model:loop="loop"
+              v-model:open-playlist="openPlaylist"
+              :disabled="media === null"
+              :btn-rounded="btnRounded"
+              :show-playlist="showPlaylist"
+              :playlist-button-color="playlistButtonColor"
+              :playback-rate-button-color="playbackRateButtonColor"
+              :settings-button-color="settingsButtonColor"
+              :fullscreen-button-color="fullscreenButtonColor"
+              :is-video="currentMedia?.type === PlayerType.VIDEO"
+              @toggle-fullscreen="toggleFullscreen"
+            />
+          </div>
+        </div>
+
+        <div v-if="showPlaylist" class="mt-3">
+          <Playlist v-model:media="currentMedia" v-model:open-playlist="openPlaylist" :playlist="playList" :playlist-variant="playlistVariant" />
+        </div>
+
+        <pre v-if="debug" class="code-block" lang="yaml">{{ text }}</pre>
+      </VCardText>
+    </VCard>
   </div>
-  <pre v-if="debug" class="code-block" lang="yaml">{{ text }}</pre>
 </template>
 
 <style lang="scss" scoped>
-.slider-buffer-container {
-  position: relative;
-  width: 100%;
-  height: 40px; /* Adjust based on your theme */
-  display: flex;
-  align-items: center;
-}
-
-.buffer-bar {
-  position: absolute;
-  top: unset !important;
-  left: 0;
-  z-index: 0;
-  border-radius: 4px;
-}
-
-.play-slider {
-  position: absolute;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  margin: 0;
-}
-
-.media-progress-duration {
-  text-wrap: nowrap;
-  margin-left: 10px;
-}
-
 .extra-actions {
   width: 140px;
   display: flex;

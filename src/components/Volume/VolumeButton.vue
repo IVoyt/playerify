@@ -4,6 +4,7 @@ import { defineProps } from 'vue'
 const muted = defineModel('muted')
 
 defineProps({
+  disabled: { type: Boolean, default () { return false } },
   volumeButtonColor: { type: String, default () { return 'default' } },
   volumeOffButtonColor: { type: String, default () { return 'default' } },
   btnRounded: { type: String, default () { return 'sm' } },
@@ -14,9 +15,10 @@ defineProps({
 <template>
   <VBtn
     size="32"
+    :disabled="disabled"
     :color="muted ? volumeOffButtonColor : volumeButtonColor"
     :rounded="btnRounded"
-    class="ml-2 mr-3"
+    class="ml-3 mr-3"
     v-bind="props"
     @click="muted = !muted"
   >

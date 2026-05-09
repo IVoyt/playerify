@@ -1,6 +1,7 @@
 import vue from 'eslint-plugin-vue'
 import tseslint from 'typescript-eslint'
 import vueParser from 'vue-eslint-parser'
+import stylistic from '@stylistic/eslint-plugin'
 
 export default [
   ...tseslint.configs.recommended,
@@ -16,6 +17,10 @@ export default [
 
   {
     files: ['**/*.{ts,js,vue}'],
+
+    plugins: {
+      '@stylistic': stylistic,
+    },
 
     languageOptions: {
       parser: vueParser,
@@ -47,7 +52,9 @@ export default [
         multiline: { max: 1 },
       }],
 
-      'vue/multi-word-component-names': 'off'
+      'vue/multi-word-component-names': 'off',
+
+      '@stylistic/multiline-ternary': ['error', 'always-multiline']
     }
   },
 ]

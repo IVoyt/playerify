@@ -6,14 +6,13 @@ Simple audio player with default settings:
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/horse.mp3'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' }
+]
 </script>
 
 <template>
-  <Playerify
-    :src="src"
-    type="audio"
-  />
+  <Playerify :playlist="playlist" />
 </template>
 ```
 
@@ -23,14 +22,30 @@ Simple video player:
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny' }
+]
 </script>
 
 <template>
-  <Playerify
-    :src="src"
-    type="video"
-  />
+  <Playerify :playlist="playlist" />
+</template>
+```
+
+## Simple URL Array
+
+Use a simple array of URLs (names auto-generated):
+
+```vue
+<script setup lang="ts">
+const playlist = [
+  'https://www.w3schools.com/tags/horse.mp3',
+  'https://www.w3schools.com/tags/mov_bbb.mp4',
+]
+</script>
+
+<template>
+  <Playerify :playlist="playlist" :show-playlist="true" />
 </template>
 ```
 
@@ -40,13 +55,14 @@ Customize button and slider colors:
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video' }
+]
 </script>
 
 <template>
   <Playerify
-    :src="src"
-    type="video"
+    :playlist="playlist"
     play-button-color="green"
     pause-button-color="teal"
     volume-button-color="cyan"
@@ -68,13 +84,14 @@ All props enabled:
 
 ```vue
 <script setup lang="ts">
-const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Custom Video' }
+]
 </script>
 
 <template>
   <Playerify
-    :src="src"
-    type="video"
+    :playlist="playlist"
     video-width="640"
     video-height="360"
     play-button-color="primary"
@@ -92,7 +109,6 @@ const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
     default-volume="0.5"
     progress-color="primary"
     buffer-color="grey-lighten-2"
-    file-name="My Custom Video"
     :show-file-name="true"
     :show-duration="true"
     :permanent-volume-slider="true"
@@ -103,21 +119,17 @@ const src = 'https://www.w3schools.com/tags/mov_bbb.mp4'
 
 ## TypeScript Usage
 
-Using the PlayerType enum:
-
 ```vue
 <script setup lang="ts">
-import { PlayerType } from 'playerify'
+import type { PlaylistItem } from 'playerify'
 
-const audioSrc = 'https://www.w3schools.com/tags/horse.mp3'
-const videoSrc = 'https://www.w3schools.com/tags/mov_bbb.mp4'
-const mediaType = PlayerType.VIDEO
+const playlist: PlaylistItem[] = [
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' },
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video' },
+]
 </script>
 
 <template>
-  <Playerify
-    :src="videoSrc"
-    :type="mediaType"
-  />
+  <Playerify :playlist="playlist" :show-playlist="true" />
 </template>
 ```

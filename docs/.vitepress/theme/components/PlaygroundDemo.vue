@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { PlaylistItem } from '@playerify/types'
 
-const mediaType = ref<'audio' | 'video'>('video')
-
-const sources = {
+const sources: { [key:string]: { src: string, name: string }[] } = {
   audio: [
     {
       src: 'https://freemusicarchive.org/track/dream-diary/stream',
@@ -38,18 +37,25 @@ const sources = {
   ]
 }
 
-const selectedSource = ref(sources.video[0])
+const playlist: PlaylistItem[] = []
+for (const group of Object.keys(sources)) {
+  sources[group].forEach((item: { src: string, name: string }) => {
+    playlist.push(item)
+  })
+}
 
 const playButtonColor = ref('default')
 const pauseButtonColor = ref('primary')
 const volumeButtonColor = ref('default')
 const volumeOffButtonColor = ref('default')
+const playlistVariant = ref('default')
+const playlistButtonColor = ref('default')
 const playbackRateButtonColor = ref('default')
 const settingsButtonColor = ref('default')
 const fullscreenButtonColor = ref('orange')
 
-const customFileName = ref('')
 const debug = ref(false)
+const showPlaylist = ref(true)
 const showFileName = ref(true)
 const showDuration = ref(true)
 const permanentVolumeSlider = ref(true)
@@ -61,12 +67,14 @@ const progressRounded = ref('sm')
 
 const generatedCode = computed(() => {
   const props = [
-    `:src="${selectedSource.value.src}"`,
-    `type="${mediaType.value}"`,
+    `:playlist="${JSON.stringify(playlist)}"`,
+    ':show-playlist="showPlaylist"',
     `play-button-color="${playButtonColor.value}"`,
     `pause-button-color="${pauseButtonColor.value}"`,
     `volume-button-color="${volumeButtonColor.value}"`,
     `volume-off-button-color="${volumeOffButtonColor.value}"`,
+    `playlist-button-color="${playlistButtonColor.value}"`,
+    `playlist-variant="${playlistVariant.value}"`,
     `playback-rate-button-color="${playbackRateButtonColor.value}"`,
     `settings-button-color="${settingsButtonColor.value}"`,
     `fullscreen-button-color="${fullscreenButtonColor.value}"`,
@@ -74,7 +82,6 @@ const generatedCode = computed(() => {
     `progress-rounded="${progressRounded.value}"`,
     `default-rewind="${defaultRewind.value}"`,
     `default-volume="${defaultVolume.value}"`,
-    `:file-name="${customFileName.value || selectedSource.value.name}"`,
     `:show-file-name="${showFileName.value}"`,
     `:show-duration="${showDuration.value}"`,
     `:permanent-volume-slider="${permanentVolumeSlider.value}"`,
@@ -90,26 +97,15 @@ const generatedCode = computed(() => {
     <VRow>
       <VCol cols="12">
         <VCard class="pa-4">
-          <VCardTitle>Sources</VCardTitle>
-
-          <VCardItem v-for="(items, type) in sources">
-            <VCardText>{{ type }}</VCardText>
-            <VBtn v-for="item in items" class="ma-2" @click="selectedSource = item; mediaType = type">
-              {{ item.name }}
-            </VBtn>
-          </VCardItem>
-        </VCard>
-
-        <VCard class="pa-4">
           <VCardTitle>Player</VCardTitle>
           <Playerify
-            :key="selectedSource.src"
-            :src="selectedSource.src"
-            :type="mediaType"
+            :playlist="playlist"
+            :show-playlist="showPlaylist"
             :play-button-color="playButtonColor"
             :pause-button-color="pauseButtonColor"
             :volume-button-color="volumeButtonColor"
             :volume-off-button-color="volumeOffButtonColor"
+            :playlist-button-color="playlistButtonColor"
             :playback-rate-button-color="playbackRateButtonColor"
             :settings-button-color="settingsButtonColor"
             :fullscreen-button-color="fullscreenButtonColor"
@@ -117,7 +113,6 @@ const generatedCode = computed(() => {
             :progress-rounded="progressRounded"
             :default-rewind="defaultRewind"
             :default-volume="defaultVolume"
-            :file-name="customFileName || selectedSource.name"
             :show-file-name="showFileName"
             :show-duration="showDuration"
             :permanent-volume-slider="permanentVolumeSlider"
@@ -161,6 +156,13 @@ const generatedCode = computed(() => {
                   class="mb-4"
                   :hide-details="true"
                 />
+                <VSwitch
+                  v-model="showPlaylist"
+                  color="primary"
+                  label="Show Playlist"
+                  class="mb-4"
+                  :hide-details="true"
+                />
                 <VSlider
                   v-model="defaultRewind"
                   color="primary"
@@ -182,15 +184,6 @@ const generatedCode = computed(() => {
                   class="mb-8"
                   thumb-label="always"
                   :hide-details="true"
-                />
-
-                <VSelect
-                  v-model="mediaType"
-                  :items="['audio', 'video']"
-                  label="Media Type"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
                 />
 
                 <VSelect
@@ -217,17 +210,6 @@ const generatedCode = computed(() => {
             <VCol cols="12" md="6">
               <VCard class="pa-4">
                 <VTextField
-                  v-model="customFileName"
-                  label="Custom File Name"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                  :hide-details="true"
-                />
-
-                <VDivider />
-
-                <VTextField
                   v-model="playButtonColor"
                   label="Play Button Color"
                   class="mb-2"
@@ -251,6 +233,20 @@ const generatedCode = computed(() => {
                 <VTextField
                   v-model="volumeOffButtonColor"
                   label="Volume Off Button Color"
+                  class="mb-2"
+                  variant="outlined"
+                  density="comfortable"
+                />
+                <VTextField
+                  v-model="playlistButtonColor"
+                  label="Playlist Button Color"
+                  class="mb-2"
+                  variant="outlined"
+                  density="comfortable"
+                />
+                <VTextField
+                  v-model="playlistVariant"
+                  label="Playlist Variant"
                   class="mb-2"
                   variant="outlined"
                   density="comfortable"
@@ -285,13 +281,26 @@ const generatedCode = computed(() => {
     </VRow>
 
     <VCard class="pa-4 mt-4">
-      <VCardTitle>Generated Code</VCardTitle>
-      <VTextarea
-        :model-value="generatedCode"
-        readonly
-        auto-grow
-        variant="outlined"
-      />
+      <VExpansionPanels>
+        <VExpansionPanel>
+          <VExpansionPanelTitle>
+            <template #actions="{ expanded }">
+              <svg v-if="expanded" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 13l8-3l8 3" /></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 11l8 3l8-3" /></svg>
+            </template>
+
+            <VCardTitle>Generated Code</VCardTitle>
+          </VExpansionPanelTitle>
+          <VExpansionPanelText>
+            <VTextarea
+              :model-value="generatedCode"
+              readonly
+              auto-grow
+              variant="outlined"
+            />
+          </VExpansionPanelText>
+        </VExpansionPanel>
+      </VExpansionPanels>
     </VCard>
   </div>
 </template>

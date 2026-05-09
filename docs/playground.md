@@ -8,11 +8,6 @@ Interactive configuration generator for the Playerify component.
 
 ## Configuration Options
 
-### Media Type
-
-- `audio` - Audio player
-- `video` - Video player (default)
-
 ### Button Styling
 
 | Prop                       | Values | Default |
@@ -22,6 +17,8 @@ Interactive configuration generator for the Playerify component.
 | pause-button-color         | Vuetify color name or hex | primary |
 | volume-button-color        | Vuetify color name or hex | default |
 | volume-off-button-color    | Vuetify color name or hex | default |
+| playlist-button-color      | Vuetify color name or hex | default |
+| playlist-variant | text, flat, elevated, tonal, outlined    | elevated   |
 | playback-rate-button-color | Vuetify color name or hex | default |
 | settings-button-color      | Vuetify color name or hex | default |
 | fullscreen-button-color    | Vuetify color name or hex | default |
@@ -42,7 +39,22 @@ Interactive configuration generator for the Playerify component.
 |-------------------------|---------------|---------|
 | default-rewind          | number (1-60) | 10      |
 | default-volume          | number (0-1)  | 0.8     |
-| file-name          | string        |     |
+| file-name               | string        |     |
 | show-file-name          | boolean       | true    |
 | show-duration           | boolean       | true    |
+| show-playlist    | boolean                                   | false      |
 | permanent-volume-slider | boolean       | true    |
+
+## Media Sources
+
+All media files used in the Playground belong to their respective authors and are licensed under [Creative Commons](https://creativecommons.org/).
+
+| Title | Author | Source |
+|-------|--------|--------|
+| Big Buck Bunny | Blender Foundation | archive.org |
+| Sintel | Blender Foundation | archive.org |
+| Elephant's Dream | Blender Foundation | archive.org |
+| Coffee Run | Blender Foundation | Wikimedia Commons |
+| Dream Diary | Pamela Yuen | Free Music Archive |
+| Tranquility | Free The Muses | Free Music Archive |
+| Morning Coffee Vibe | YuraSoop | Free Music Archive |
