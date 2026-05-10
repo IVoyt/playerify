@@ -8,7 +8,7 @@ Audio/Video player for [Vuetify 3](https://vuetifyjs.com)
 
 ## Live Demo
 
-[View Documentation & Demo](https://playerify.ligamedia.dev)
+[View Documentation & Demo](https://ivoyt.github.io/playerify)
 
 ## Requirements
 
