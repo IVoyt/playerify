@@ -1,3 +1,6 @@
+### v0.3.1
+- update build
+
 ### v0.3.0
 - add cover image
 

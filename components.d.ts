@@ -8,8 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ExtraActions: typeof import('./src/components/ExtraActions.vue')['default']
+    BaseControls: typeof import('./src/components/BaseControls.vue')['default']
+    ExtraControls: typeof import('./src/components/ExtraControls.vue')['default']
     Playerify: typeof import('./src/components/Playerify.vue')['default']
+    Playlist: typeof import('./src/components/Playlist.vue')['default']
+    Progress: typeof import('./src/components/Progress.vue')['default']
     Volume: typeof import('./src/components/Volume.vue')['default']
     VolumeButton: typeof import('./src/components/Volume/VolumeButton.vue')['default']
     VolumeSlider: typeof import('./src/components/Volume/VolumeSlider.vue')['default']
