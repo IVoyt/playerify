@@ -11,12 +11,13 @@ import { isFloat, stringify, processPlaylist } from '@playerify/utils'
 
 const props = defineProps({
   type: { validator: (value: PlayerType) => Object.values(PlayerType).includes(value) },
+  coverImage: { type: String },
   showPlaylist: { type: Boolean, default: false },
   playlist: { type: Array<string|PlaylistItem>, default: () => [] },
   playlistVariant: { type: String, default: 'elevated' },
   playlistButtonColor: { type: String, default: 'default' },
-  videoWidth: { type: String, default: '100%' },
-  videoHeight: { type: String, default: '' },
+  frameWidth: { type: String, default: '100%' },
+  frameHeight: { type: String, default: '' },
   playButtonColor: { type: String, default: 'default' },
   pauseButtonColor: { type: String, default: 'default' },
   volumeButtonColor: { type: String, default: 'default' },
@@ -45,6 +46,18 @@ const defaultType = ref(props.type)
 const currentFileName = ref('')
 const currentMedia: Ref<PlaylistItemInternal|null> = ref(null)
 const currentType = ref(defaultType.value || 'audio')
+const currentCoverImage = ref(props.coverImage)
+
+const coverImageAttributes = computed(() => {
+  const attributes: { width: string, height?: string } = { width: 'auto' }
+  if (props.frameWidth) {
+    attributes.width = props.frameWidth
+  }
+  if (props.frameHeight) {
+    attributes.height = props.frameHeight
+  }
+  return attributes
+})
 
 const defaultVolume = computed(() => {
   if (props.defaultVolume > 1) {
@@ -88,6 +101,10 @@ function loadSrc () {
   if (typeof defaultType.value === 'undefined') {
     currentType.value = currentMedia.value?.type || ''
   }
+
+  currentCoverImage.value = typeof props.coverImage === 'undefined'
+    ? currentCoverImage.value = currentMedia.value?.cover || ''
+    : props.coverImage
 }
 
 const controls: Ref<UseMediaControlsReturn> = ref({ error: '', ...useMediaControls(media) })
@@ -138,6 +155,10 @@ watch(() => currentMedia.value, () => {
     loadSrc()
   }
 }, { deep: true })
+
+watch(() => props.coverImage, () => {
+  currentCoverImage.value = props.coverImage
+})
 </script>
 
 <template>
@@ -153,6 +174,9 @@ watch(() => currentMedia.value, () => {
         </div>
         <div v-else class="mt-5 relative rounded-md shadow overflow-hidden text-center">
           <template v-if="currentType === PlayerType.AUDIO">
+            <div v-if="currentCoverImage" class="cover-image">
+              <VImg :src="currentCoverImage" v-bind="coverImageAttributes" class="ma-auto" />
+            </div>
             <audio
               ref="media"
               :key="currentMedia.src"
@@ -166,9 +190,10 @@ watch(() => currentMedia.value, () => {
               ref="media"
               :key="currentMedia.src"
               class="w-full block"
-              :width="videoWidth"
-              :height="videoHeight"
+              :width="frameWidth"
+              :height="frameHeight"
               :loop="loop"
+              :poster="currentCoverImage"
               @click="playerControls.playing = !playerControls.playing"
             />
           </template>

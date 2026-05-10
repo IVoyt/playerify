@@ -9,8 +9,8 @@ The main media player component.
 | Prop | Type | Default     | Description |
 |------|------|-------------|-------------|
 | playlist | string[] \| PlaylistItem[] | []      | Array of playlist items - either URLs (string[]) or objects |
+| coverImage | String | ''          | Default cover image URL (falls back to playlist item cover) |
 | type | String | 'video'     | 'audio' or 'video' |
-| playlist | Array | []          | Array of playlist items |
 | showPlaylist | Boolean | false      | Show playlist panel |
 | playlistVariant | String | 'elevated'  | Playlist variant (text, flat, elevated, tonal, outlined) |
 | playlistButtonColor | String | 'default'   | Vuetify color for playlist button |
@@ -45,8 +45,8 @@ Import the type from the package:
 import type { PlaylistItem } from 'playerify'
 
 const playlist: PlaylistItem[] = [
-  { src: 'https://example.com/audio.mp3', name: 'Audio' },
-  { src: 'https://example.com/video.mp4', name: 'Video' },
+  { src: 'https://example.com/audio.mp3', name: 'Audio', cover: 'https://example.com/cover.jpg' },
+  { src: 'https://example.com/video.mp4', name: 'Video', cover: 'https://example.com/poster.jpg' },
 ]
 ```
 

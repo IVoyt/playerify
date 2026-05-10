@@ -1,3 +1,6 @@
+### v0.3.0
+- add cover image
+
 ### v0.2.1
 - fix docs/demo link
 

@@ -65,10 +65,17 @@ const defaultVolume = ref(0.8)
 const btnRounded = ref('sm')
 const progressRounded = ref('sm')
 
+const frameWidth = ref('100%')
+const frameHeight = ref('')
+const coverImage = ref('')
+
 const generatedCode = computed(() => {
   const props = [
     `:playlist="${JSON.stringify(playlist)}"`,
     ':show-playlist="showPlaylist"',
+    `:cover-image="${coverImage.value}"`,
+    `:frame-width="${frameWidth.value}"`,
+    `:frame-height="${frameHeight.value}"`,
     `play-button-color="${playButtonColor.value}"`,
     `pause-button-color="${pauseButtonColor.value}"`,
     `volume-button-color="${volumeButtonColor.value}"`,
@@ -101,6 +108,9 @@ const generatedCode = computed(() => {
           <Playerify
             :playlist="playlist"
             :show-playlist="showPlaylist"
+            :cover-image="coverImage"
+            :frame-width="frameWidth"
+            :frame-height="frameHeight"
             :play-button-color="playButtonColor"
             :pause-button-color="pauseButtonColor"
             :volume-button-color="volumeButtonColor"
@@ -203,6 +213,32 @@ const generatedCode = computed(() => {
                   variant="outlined"
                   density="comfortable"
                   :hide-details="true"
+                />
+
+                <VDivider />
+
+                <VTextField
+                  v-model="frameWidth"
+                  label="Frame Width"
+                  class="mb-2"
+                  variant="outlined"
+                  density="comfortable"
+                />
+
+                <VTextField
+                  v-model="frameHeight"
+                  label="Frame Height"
+                  class="mb-2"
+                  variant="outlined"
+                  density="comfortable"
+                />
+
+                <VTextField
+                  v-model="coverImage"
+                  label="Cover Image"
+                  class="mb-2"
+                  variant="outlined"
+                  density="comfortable"
                 />
               </VCard>
             </VCol>
