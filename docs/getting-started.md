@@ -61,7 +61,7 @@ app.mount('#app')
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' }
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse', cover: 'https://example.com/cover.jpg' }
 ]
 </script>
 
@@ -79,7 +79,7 @@ const playlist = [
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny' }
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny', cover: 'https://example.com/poster.jpg' }
 ]
 </script>
 
@@ -116,9 +116,9 @@ const playlist = [
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://example.com/audio1.mp3', name: 'Track 1' },
-  { src: 'https://example.com/audio2.mp3', name: 'Track 2' },
-  { src: 'https://example.com/video.mp4', name: 'Video' },
+  { src: 'https://example.com/audio1.mp3', name: 'Track 1', cover: 'https://example.com/cover1.jpg' },
+  { src: 'https://example.com/audio2.mp3', name: 'Track 2', cover: 'https://example.com/cover2.jpg' },
+  { src: 'https://example.com/video.mp4', name: 'Video', cover: 'https://example.com/poster.jpg' },
 ]
 </script>
 
@@ -134,7 +134,8 @@ const playlist = [
 
 #### Playlist Item Properties
 
-| Property   | Type   | Description                              |
-|------------|--------|------------------------------------------|
-| `src`      | string | Media source URL (required)             |
-| `name`     | string | Display name (optional, auto-generated) |
+| Property   | Type     | Description                                        |
+|------------|----------|----------------------------------------------------|
+| `src`      | string   | Media source URL (required)                        |
+| `name`     | string   | Display name (optional, auto-generated)            |
+| `cover`    | string   | Cover image URL for audio/video display (optional) |

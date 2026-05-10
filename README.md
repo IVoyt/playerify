@@ -88,9 +88,9 @@ Found a bug or have ideas? [Create an issue](https://github.com/IVoyt/playerify/
 ## TODO
 
 * [x] playlist
+* [x] cover image
 * [ ] replace the default fullscreen UI
 * [ ] customizable control buttons
-* [ ] cover image
 
 ## License
 

@@ -7,7 +7,7 @@ Simple audio player with default settings:
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' }
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse', cover: 'https://example.com/cover.jpg' }
 ]
 </script>
 
@@ -23,7 +23,7 @@ Simple video player:
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny' }
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Big Buck Bunny', cover: 'https://example.com/poster.jpg' }
 ]
 </script>
 
@@ -56,7 +56,7 @@ Customize button and slider colors:
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video' }
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video', cover: 'https://example.com/poster.jpg' }
 ]
 </script>
 
@@ -85,7 +85,7 @@ All props enabled:
 ```vue
 <script setup lang="ts">
 const playlist = [
-  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Custom Video' }
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Custom Video', cover: 'https://example.com/poster.jpg' }
 ]
 </script>
 
@@ -124,8 +124,8 @@ const playlist = [
 import type { PlaylistItem } from 'playerify'
 
 const playlist: PlaylistItem[] = [
-  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse' },
-  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video' },
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse', cover: 'https://example.com/cover.jpg' },
+  { src: 'https://www.w3schools.com/tags/mov_bbb.mp4', name: 'Video', cover: 'https://example.com/poster.jpg' },
 ]
 </script>
 

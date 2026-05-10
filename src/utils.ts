@@ -33,8 +33,8 @@ const stringify = reactify(
 const processPlaylist = (playlist: string[]|PlaylistItem[]): Array<PlaylistItemInternal> => {
   const playList: Ref<Array<PlaylistItemInternal>> = ref(playlist.map((item: string|PlaylistItem): PlaylistItemInternal => {
     return typeof item === 'string'
-      ? { src: item, name: getFileNameFromSrc(item) || '' }
-      : { ...item }
+      ? { src: item, name: getFileNameFromSrc(item) || '', cover: '' }
+      : { src: item.src, name: item.name || getFileNameFromSrc(item.src) || '', cover: item.cover || '' }
   }))
   for (const item of playList.value) {
     if (!item.src) {
