@@ -20,8 +20,20 @@ Interactive configuration generator for the Playerify component.
 | playlist-button-color      | Vuetify color name or hex               | default    |
 | playlist-variant           | text, flat, elevated, tonal, outlined   | elevated   |
 | playback-rate-button-color | Vuetify color name or hex               | default    |
-| settings-button-color      | Vuetify color name or hex               | default    |
+| extras-button-color        | Vuetify color name or hex               | default    |
 | fullscreen-button-color    | Vuetify color name or hex               | default    |
+| hide-all-controls          | boolean                                 | false      |
+| hide-progress              | boolean                                 | false      |
+| hide-main-controls         | boolean                                 | false      |
+| hide-extra-controls        | boolean                                 | false      |
+| hide-play-button           | boolean                                 | false      |
+| hide-volume-button         | boolean                                 | false      |
+| hide-playlist-button       | boolean                                 | false      |
+| hide-playback-rate-button  | boolean                                 | false      |
+| hide-extras-button         | boolean                                 | false      |
+| hide-fullscreen-button     | boolean                                 | false      |
+| hide-file-name             | boolean                                 | false      |
+| hide-duration              | boolean                                 | false      |
 
 ### Progress Styling
 
@@ -42,9 +54,8 @@ Interactive configuration generator for the Playerify component.
 | file-name               | string                  |         |
 | frame-width             | string                  |         |
 | frame-height            | string                  |         |
-| show-file-name          | boolean                 | true    |
-| show-duration           | boolean                 | true    |
-| show-playlist           | boolean                 | false   |
+| cover-image-original-size | boolean             | true    |
+| hide-playlist-button    | boolean                 | false   |
 | permanent-volume-slider | boolean                 | true    |
 
 ## Media Sources

@@ -68,8 +68,6 @@ const playlist = [
 <template>
   <Playerify
     :playlist="playlist"
-    :show-file-name="true"
-    :show-duration="true"
   />
 </template>
 ```
@@ -86,10 +84,8 @@ const playlist = [
 <template>
   <Playerify
     :playlist="playlist"
-    video-width="320"
-    video-height="200"
-    :show-file-name="true"
-    :show-duration="true"
+    frame-width="320"
+    frame-height="200"
   />
 </template>
 ```
@@ -125,7 +121,6 @@ const playlist = [
 <template>
   <Playerify
     :playlist="playlist"
-    :show-playlist="true"
     playlist-variant="elevated"
     playlist-button-color="primary"
   />

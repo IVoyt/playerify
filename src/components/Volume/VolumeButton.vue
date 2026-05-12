@@ -5,6 +5,7 @@ const muted = defineModel('muted')
 
 defineProps({
   disabled: { type: Boolean, default () { return false } },
+  hideVolumeButton: { type: Boolean, default () { return false } },
   volumeButtonColor: { type: String, default () { return 'default' } },
   volumeOffButtonColor: { type: String, default () { return 'default' } },
   btnRounded: { type: String, default () { return 'sm' } },
@@ -13,22 +14,29 @@ defineProps({
 </script>
 
 <template>
-  <VBtn
-    size="32"
-    :disabled="disabled"
-    :color="muted ? volumeOffButtonColor : volumeButtonColor"
+  <VBtnGroup
+    v-if="!hideVolumeButton"
     :rounded="btnRounded"
-    class="ml-3 mr-3"
-    v-bind="props"
-    @click="muted = !muted"
+    :disabled="disabled"
+    variant="elevated"
+    elevation="2"
+    density="compact"
+    class="mr-1"
   >
-    <VIcon>
-      <template v-if="muted">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 8a5 5 0 0 1 1.912 4.934m-1.377 2.602A5 5 0 0 1 15 16m2.7-11a9 9 0 0 1 2.362 11.086m-1.676 2.299A9 9 0 0 1 17.7 19M9.069 5.054L9.5 4.5A.8.8 0 0 1 11 5v2m0 4v8a.8.8 0 0 1-1.5.5L6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2l1.294-1.664M3 3l18 18" /></svg>
-      </template>
-      <template v-else>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 8a5 5 0 0 1 0 8m2.7-11a9 9 0 0 1 0 14M6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2l3.5-4.5A.8.8 0 0 1 11 5v14a.8.8 0 0 1-1.5.5z" /></svg>
-      </template>
-    </VIcon>
-  </VBtn>
+    <VBtn
+      size="36"
+      :color="muted ? volumeOffButtonColor : volumeButtonColor"
+      v-bind="props"
+      @click="muted = !muted"
+    >
+      <VIcon>
+        <template v-if="muted">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 8a5 5 0 0 1 1.912 4.934m-1.377 2.602A5 5 0 0 1 15 16m2.7-11a9 9 0 0 1 2.362 11.086m-1.676 2.299A9 9 0 0 1 17.7 19M9.069 5.054L9.5 4.5A.8.8 0 0 1 11 5v2m0 4v8a.8.8 0 0 1-1.5.5L6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2l1.294-1.664M3 3l18 18" /></svg>
+        </template>
+        <template v-else>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 8a5 5 0 0 1 0 8m2.7-11a9 9 0 0 1 0 14M6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2l3.5-4.5A.8.8 0 0 1 11 5v14a.8.8 0 0 1-1.5.5z" /></svg>
+        </template>
+      </VIcon>
+    </VBtn>
+  </VBtnGroup>
 </template>

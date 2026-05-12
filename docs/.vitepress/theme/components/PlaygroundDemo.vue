@@ -55,9 +55,20 @@ const settingsButtonColor = ref('default')
 const fullscreenButtonColor = ref('orange')
 
 const debug = ref(false)
-const showPlaylist = ref(true)
-const showFileName = ref(true)
-const showDuration = ref(true)
+const hidePlaylistButton = ref(false)
+const hideFileName = ref(false)
+const hideDuration = ref(false)
+const hideMainControls = ref(false)
+const hideExtraControls = ref(false)
+const hidePrevTrackButton = ref(false)
+const hideNextTrackButton = ref(false)
+const hidePlayButton = ref(false)
+const hideVolumeButton = ref(false)
+const hidePlaybackRateButton = ref(false)
+const hideFullscreenButton = ref(false)
+const hideAllControls = ref(false)
+const hideProgress = ref(false)
+const coverImageOriginalSize = ref(true)
 const permanentVolumeSlider = ref(true)
 
 const defaultRewind = ref(10)
@@ -72,10 +83,23 @@ const coverImage = ref('')
 const generatedCode = computed(() => {
   const props = [
     `:playlist="${JSON.stringify(playlist)}"`,
-    ':show-playlist="showPlaylist"',
+    `:hide-playlist-button="${hidePlaylistButton.value}"`,
     `:cover-image="${coverImage.value}"`,
+    `:cover-image-original-size="${coverImageOriginalSize.value}"`,
     `:frame-width="${frameWidth.value}"`,
     `:frame-height="${frameHeight.value}"`,
+    `:hide-all-controls="${hideAllControls.value}"`,
+    `:hide-progress="${hideProgress.value}"`,
+    `:hide-main-controls="${hideMainControls.value}"`,
+    `:hide-extra-controls="${hideExtraControls.value}"`,
+    `:hide-prev-track-button="${hidePrevTrackButton.value}"`,
+    `:hide-next-track-button="${hideNextTrackButton.value}"`,
+    `:hide-play-button="${hidePlayButton.value}"`,
+    `:hide-volume-button="${hideVolumeButton.value}"`,
+    `:hide-playback-rate-button="${hidePlaybackRateButton.value}"`,
+    `:hide-fullscreen-button="${hideFullscreenButton.value}"`,
+    `:hide-file-name="${hideFileName.value}"`,
+    `:hide-duration="${hideDuration.value}"`,
     `play-button-color="${playButtonColor.value}"`,
     `pause-button-color="${pauseButtonColor.value}"`,
     `volume-button-color="${volumeButtonColor.value}"`,
@@ -83,20 +107,20 @@ const generatedCode = computed(() => {
     `playlist-button-color="${playlistButtonColor.value}"`,
     `playlist-variant="${playlistVariant.value}"`,
     `playback-rate-button-color="${playbackRateButtonColor.value}"`,
-    `settings-button-color="${settingsButtonColor.value}"`,
+    `extras-button-color="${settingsButtonColor.value}"`,
     `fullscreen-button-color="${fullscreenButtonColor.value}"`,
     `btn-rounded="${btnRounded.value}"`,
     `progress-rounded="${progressRounded.value}"`,
     `default-rewind="${defaultRewind.value}"`,
     `default-volume="${defaultVolume.value}"`,
-    `:show-file-name="${showFileName.value}"`,
-    `:show-duration="${showDuration.value}"`,
     `:permanent-volume-slider="${permanentVolumeSlider.value}"`,
     `:debug="${debug.value}"`,
   ]
 
   return `<Playerify\n  ${props.join('\n  ')}\n/>`
 })
+
+const activeTab = ref('controls')
 </script>
 
 <template>
@@ -107,24 +131,35 @@ const generatedCode = computed(() => {
           <VCardTitle>Player</VCardTitle>
           <Playerify
             :playlist="playlist"
-            :show-playlist="showPlaylist"
+            :hide-playlist-button="hidePlaylistButton"
             :cover-image="coverImage"
+            :cover-image-original-size="coverImageOriginalSize"
             :frame-width="frameWidth"
             :frame-height="frameHeight"
+            :hide-all-controls="hideAllControls"
+            :hide-progress="hideProgress"
+            :hide-main-controls="hideMainControls"
+            :hide-extra-controls="hideExtraControls"
+            :hide-prev-track-button="hidePrevTrackButton"
+            :hide-next-track-button="hideNextTrackButton"
+            :hide-play-button="hidePlayButton"
+            :hide-volume-button="hideVolumeButton"
+            :hide-playback-rate-button="hidePlaybackRateButton"
+            :hide-fullscreen-button="hideFullscreenButton"
+            :hide-file-name="hideFileName"
+            :hide-duration="hideDuration"
             :play-button-color="playButtonColor"
             :pause-button-color="pauseButtonColor"
             :volume-button-color="volumeButtonColor"
             :volume-off-button-color="volumeOffButtonColor"
             :playlist-button-color="playlistButtonColor"
             :playback-rate-button-color="playbackRateButtonColor"
-            :settings-button-color="settingsButtonColor"
+            :extras-button-color="settingsButtonColor"
             :fullscreen-button-color="fullscreenButtonColor"
             :btn-rounded="btnRounded"
             :progress-rounded="progressRounded"
             :default-rewind="defaultRewind"
             :default-volume="defaultVolume"
-            :show-file-name="showFileName"
-            :show-duration="showDuration"
             :permanent-volume-slider="permanentVolumeSlider"
             :debug="debug"
           />
@@ -133,185 +168,385 @@ const generatedCode = computed(() => {
 
       <VCol cols="12">
         <VCard class="pa-4">
-          <VCardTitle>Controls</VCardTitle>
+          <VCardTitle>Config Builder</VCardTitle>
 
-          <VRow>
-            <VCol cols="12" md="6">
-              <VCard class="pa-4">
-                <VSwitch
-                  v-model="debug"
-                  color="primary"
-                  label="Debug"
-                  class="mb-2"
-                  :hide-details="true"
-                />
-                <VSwitch
-                  v-model="showFileName"
-                  color="primary"
-                  label="Show File Name"
-                  class="mb-2"
-                  :hide-details="true"
-                />
-                <VSwitch
-                  v-model="showDuration"
-                  color="primary"
-                  label="Show Duration"
-                  class="mb-2"
-                  :hide-details="true"
-                />
-                <VSwitch
-                  v-model="permanentVolumeSlider"
-                  color="primary"
-                  label="Permanent Volume Slider"
-                  class="mb-4"
-                  :hide-details="true"
-                />
-                <VSwitch
-                  v-model="showPlaylist"
-                  color="primary"
-                  label="Show Playlist"
-                  class="mb-4"
-                  :hide-details="true"
-                />
-                <VSlider
-                  v-model="defaultRewind"
-                  color="primary"
-                  label="Default Rewind"
-                  min="1"
-                  max="60"
-                  step="1"
-                  class="mb-8"
-                  thumb-label="always"
-                  :hide-details="true"
-                />
-                <VSlider
-                  v-model="defaultVolume"
-                  color="primary"
-                  label="Default Volume"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  class="mb-8"
-                  thumb-label="always"
-                  :hide-details="true"
-                />
+          <VTabs v-model="activeTab">
+            <VTab value="controls">
+              Controls
+            </VTab>
+            <VTab value="appearance">
+              Appearance
+            </VTab>
+            <VTab value="behavior">
+              Behavior
+            </VTab>
+          </VTabs>
 
-                <VSelect
-                  v-model="btnRounded"
-                  :items="['none', 'sm', 'md', 'lg', 'xl', 'pill', 'circle']"
-                  label="Button Rounded"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-
-                <VSelect
-                  v-model="progressRounded"
-                  :items="['none', 'sm', 'md', 'lg', 'xl']"
-                  label="Progress Rounded"
-                  class="mb-4"
-                  variant="outlined"
-                  density="comfortable"
-                  :hide-details="true"
-                />
-
-                <VDivider />
-
-                <VTextField
-                  v-model="frameWidth"
-                  label="Frame Width"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-
-                <VTextField
-                  v-model="frameHeight"
-                  label="Frame Height"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-
-                <VTextField
-                  v-model="coverImage"
-                  label="Cover Image"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
+          <VWindow v-model="activeTab">
+            <VWindowItem value="controls">
+              <VCard>
+                <VCardText>
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideAllControls"
+                        color="primary"
+                        label="Hide All Controls"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideProgress"
+                        color="primary"
+                        label="Hide Progress"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideMainControls"
+                        color="primary"
+                        label="Hide Main Controls"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideExtraControls"
+                        color="primary"
+                        label="Hide Extra Controls"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hidePrevTrackButton"
+                        color="primary"
+                        label="Hide Prev Track Button"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideNextTrackButton"
+                        color="primary"
+                        label="Hide Next Track Button"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hidePlayButton"
+                        color="primary"
+                        label="Hide Play Button"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideVolumeButton"
+                        color="primary"
+                        label="Hide Volume Button"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hidePlaybackRateButton"
+                        color="primary"
+                        label="Hide Playback Rate"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hideFullscreenButton"
+                        color="primary"
+                        label="Hide Fullscreen"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="hidePlaylistButton"
+                        color="primary"
+                        label="Hide Playlist Button"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+                </VCardText>
               </VCard>
-            </VCol>
+            </VWindowItem>
 
-            <VCol cols="12" md="6">
-              <VCard class="pa-4">
-                <VTextField
-                  v-model="playButtonColor"
-                  label="Play Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="pauseButtonColor"
-                  label="Pause Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="volumeButtonColor"
-                  label="Volume Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="volumeOffButtonColor"
-                  label="Volume Off Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="playlistButtonColor"
-                  label="Playlist Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="playlistVariant"
-                  label="Playlist Variant"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="playbackRateButtonColor"
-                  label="Playback Rate Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="settingsButtonColor"
-                  label="Settings Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                />
-                <VTextField
-                  v-model="fullscreenButtonColor"
-                  label="Fullscreen Button Color"
-                  class="mb-2"
-                  variant="outlined"
-                  density="comfortable"
-                  :hide-details="true"
-                />
+            <VWindowItem value="appearance">
+              <VCard>
+                <VCardText>
+                  <VRow>
+                    <VCol>
+                      <VSwitch
+                        v-model="debug"
+                        color="primary"
+                        label="Debug"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol>
+                      <VSwitch
+                        v-model="hideFileName"
+                        color="primary"
+                        label="Hide File Name"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol>
+                      <VSwitch
+                        v-model="hideDuration"
+                        color="primary"
+                        label="Hide Duration"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VDivider />
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VSlider
+                        v-model="defaultVolume"
+                        color="primary"
+                        label="Default Volume"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        class="mt-6"
+                        thumb-label="always"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="permanentVolumeSlider"
+                        color="primary"
+                        label="Permanent Volume Slider"
+                        class="mb-4"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VDivider />
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="coverImage"
+                        label="Cover Image"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="coverImageOriginalSize"
+                        color="primary"
+                        label="Cover Image Original Size"
+                        class="mb-2"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VDivider />
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="frameWidth"
+                        label="Frame Width"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="frameHeight"
+                        label="Frame Height"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VDivider />
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="playButtonColor"
+                        label="Play Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="pauseButtonColor"
+                        label="Pause Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="volumeButtonColor"
+                        label="Volume Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="volumeOffButtonColor"
+                        label="Volume Off Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="playlistButtonColor"
+                        label="Playlist Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="playlistVariant"
+                        label="Playlist Variant"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="playbackRateButtonColor"
+                        label="Playback Rate Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="settingsButtonColor"
+                        label="Extras Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VTextField
+                        v-model="fullscreenButtonColor"
+                        label="Fullscreen Button Color"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VDivider />
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VSelect
+                        v-model="btnRounded"
+                        :items="['none', 'sm', 'md', 'lg', 'xl', 'pill', 'circle']"
+                        label="Button Rounded"
+                        class="mb-2"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                    <VCol cols="12" md="6">
+                      <VSelect
+                        v-model="progressRounded"
+                        :items="['none', 'sm', 'md', 'lg', 'xl']"
+                        label="Progress Rounded"
+                        class="mb-4"
+                        variant="outlined"
+                        density="comfortable"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+                </VCardText>
               </VCard>
-            </VCol>
-          </VRow>
+            </VWindowItem>
+
+            <VWindowItem value="behavior">
+              <VCard>
+                <VCardText>
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VSlider
+                        v-model="defaultRewind"
+                        color="primary"
+                        label="Default Rewind"
+                        min="1"
+                        max="60"
+                        step="1"
+                        class="mt-6"
+                        thumb-label="always"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+                </VCardText>
+              </VCard>
+            </VWindowItem>
+          </VWindow>
         </VCard>
       </VCol>
     </VRow>

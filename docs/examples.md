@@ -45,7 +45,7 @@ const playlist = [
 </script>
 
 <template>
-  <Playerify :playlist="playlist" :show-playlist="true" />
+  <Playerify :playlist="playlist" />
 </template>
 ```
 
@@ -68,7 +68,7 @@ const playlist = [
     volume-button-color="cyan"
     volume-off-button-color="red"
     playback-rate-button-color="blue"
-    settings-button-color="purple"
+    extras-button-color="purple"
     fullscreen-button-color="orange"
     progress-slider-color="indigo"
     volume-slider-color="amber"
@@ -92,14 +92,14 @@ const playlist = [
 <template>
   <Playerify
     :playlist="playlist"
-    video-width="640"
-    video-height="360"
+    frame-width="640"
+    frame-height="360"
     play-button-color="primary"
     pause-button-color="success"
     volume-button-color="warning"
     volume-off-button-color="error"
     playback-rate-button-color="info"
-    settings-button-color="secondary"
+    extras-button-color="secondary"
     fullscreen-button-color="orange"
     btn-rounded="lg"
     progress-rounded="md"
@@ -109,10 +109,44 @@ const playlist = [
     default-volume="0.5"
     progress-color="primary"
     buffer-color="grey-lighten-2"
-    :show-file-name="true"
-    :show-duration="true"
-    :permanent-volume-slider="true"
-    :debug="false"
+  />
+</template>
+```
+
+## Minimal Player
+
+Hide all controls:
+
+```vue
+<script setup lang="ts">
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse', cover: 'https://example.com/cover.jpg' }
+]
+</script>
+
+<template>
+  <Playerify
+    :playlist="playlist"
+    :hide-all-controls="true"
+  />
+</template>
+```
+
+## Custom Controls with Hide Props
+
+Hide the entire extras section (playlist, settings, fullscreen) while keeping main controls:
+
+```vue
+<script setup lang="ts">
+const playlist = [
+  { src: 'https://www.w3schools.com/tags/horse.mp3', name: 'Horse', cover: 'https://example.com/cover.jpg' }
+]
+</script>
+
+<template>
+  <Playerify
+    :playlist="playlist"
+    :hide-extra-controls="true"
   />
 </template>
 ```
@@ -130,6 +164,6 @@ const playlist: PlaylistItem[] = [
 </script>
 
 <template>
-  <Playerify :playlist="playlist" :show-playlist="true" />
+  <Playerify :playlist="playlist" />
 </template>
 ```
