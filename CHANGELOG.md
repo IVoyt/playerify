@@ -1,3 +1,8 @@
+### v0.4.0
+- support original or adaptive cover image
+- add "picture in picture" mode
+- customizable control buttons
+
 ### v0.3.1
 - update build
 
