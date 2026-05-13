@@ -134,7 +134,7 @@ const playlist = [
 
 ## Custom Controls with Hide Props
 
-Hide the entire extras section (playlist, settings, fullscreen) while keeping main controls:
+Hide the entire extras section (playlist, settings, fullscreen) while keeping the main controls:
 
 ```vue
 <script setup lang="ts">

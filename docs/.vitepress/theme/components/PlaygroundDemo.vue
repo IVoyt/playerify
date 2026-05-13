@@ -55,6 +55,7 @@ const settingsButtonColor = ref('default')
 const fullscreenButtonColor = ref('orange')
 
 const debug = ref(false)
+const hidePlaylist = ref(false)
 const hidePlaylistButton = ref(false)
 const hideFileName = ref(false)
 const hideDuration = ref(false)
@@ -148,6 +149,7 @@ const activeTab = ref('controls')
             :hide-fullscreen-button="hideFullscreenButton"
             :hide-file-name="hideFileName"
             :hide-duration="hideDuration"
+            :hide-playlist="hidePlaylist"
             :play-button-color="playButtonColor"
             :pause-button-color="pauseButtonColor"
             :volume-button-color="volumeButtonColor"
@@ -295,7 +297,7 @@ const activeTab = ref('controls')
               <VCard>
                 <VCardText>
                   <VRow>
-                    <VCol>
+                    <VCol cols="12" md="4">
                       <VSwitch
                         v-model="debug"
                         color="primary"
@@ -304,7 +306,7 @@ const activeTab = ref('controls')
                         :hide-details="true"
                       />
                     </VCol>
-                    <VCol>
+                    <VCol cols="12" md="4">
                       <VSwitch
                         v-model="hideFileName"
                         color="primary"
@@ -313,7 +315,7 @@ const activeTab = ref('controls')
                         :hide-details="true"
                       />
                     </VCol>
-                    <VCol>
+                    <VCol cols="12" md="4">
                       <VSwitch
                         v-model="hideDuration"
                         color="primary"
@@ -322,25 +324,16 @@ const activeTab = ref('controls')
                         :hide-details="true"
                       />
                     </VCol>
-                  </VRow>
-
-                  <VDivider />
-
-                  <VRow>
-                    <VCol cols="12" md="6">
-                      <VSlider
-                        v-model="defaultVolume"
+                    <VCol cols="12" md="4">
+                      <VSwitch
+                        v-model="hidePlaylist"
                         color="primary"
-                        label="Default Volume"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        class="mt-6"
-                        thumb-label="always"
+                        label="Hide Playlist"
+                        class="mb-2"
                         :hide-details="true"
                       />
                     </VCol>
-                    <VCol cols="12" md="6">
+                    <VCol cols="12" md="4">
                       <VSwitch
                         v-model="permanentVolumeSlider"
                         color="primary"
@@ -537,6 +530,20 @@ const activeTab = ref('controls')
                         min="1"
                         max="60"
                         step="1"
+                        class="mt-6"
+                        thumb-label="always"
+                        :hide-details="true"
+                      />
+                    </VCol>
+
+                    <VCol cols="12" md="6">
+                      <VSlider
+                        v-model="defaultVolume"
+                        color="primary"
+                        label="Default Volume"
+                        min="0"
+                        max="1"
+                        step="0.1"
                         class="mt-6"
                         thumb-label="always"
                         :hide-details="true"

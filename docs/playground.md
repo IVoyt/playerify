@@ -34,6 +34,7 @@ Interactive configuration generator for the Playerify component.
 | hide-fullscreen-button     | boolean                                 | false      |
 | hide-file-name             | boolean                                 | false      |
 | hide-duration              | boolean                                 | false      |
+| hide-playlist              | boolean                                 | false      |
 
 ### Progress Styling
 
@@ -47,16 +48,16 @@ Interactive configuration generator for the Playerify component.
 
 ### Display Options
 
-| Prop                    | Type                    | Default |
-|-------------------------|-------------------------|---------|
-| default-rewind          | number (1-60)           | 10      |
-| default-volume          | number (0-1)            | 0.8     |
-| file-name               | string                  |         |
-| frame-width             | string                  |         |
-| frame-height            | string                  |         |
-| cover-image-original-size | boolean             | true    |
-| hide-playlist-button    | boolean                 | false   |
-| permanent-volume-slider | boolean                 | true    |
+| Prop                       | Type                 | Default |
+|----------------------------|----------------------|---------|
+| default-rewind             | number (1-60)        | 10      |
+| default-volume             | number (0-1)         | 0.8     |
+| file-name                  | string               |         |
+| frame-width                | string               |         |
+| frame-height               | string               |         |
+| cover-image-original-size  | boolean              | true    |
+| hide-playlist-button       | boolean              | false   |
+| permanent-volume-slider    | boolean              | true    |
 
 ## Media Sources
 
