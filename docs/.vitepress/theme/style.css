@@ -38,7 +38,6 @@
 }
 
 /* Fix select dropdown menu */
-.v-overlay__content,
 .v-menu__content,
 .v-select__content {
   background-color: var(--vp-c-bg) !important;

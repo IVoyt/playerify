@@ -3,6 +3,8 @@ import VolumeButton from '@playerify/components/Volume/VolumeButton.vue'
 import VolumeSlider from '@playerify/components/Volume/VolumeSlider.vue'
 import { computed, defineProps, ref, watch } from 'vue'
 
+import { useListen } from '@playerify/composables/useEventBus'
+
 import { useDisplay } from 'vuetify'
 
 const { width } = useDisplay()
@@ -20,7 +22,15 @@ const props = defineProps({
   permanentVolumeSlider: { type: Boolean, default () { return false } },
 })
 
-const permanentVolumeSlider = computed(() => props.permanentVolumeSlider && width.value > 660)
+const containerWidth = ref<number|null>(null)
+useListen('playerify--container-resize', (newWidth: number) => {
+  containerWidth.value = newWidth
+})
+const permanentVolumeSlider = computed(() => {
+  const windowWidthGt660 = width.value > 660
+  const containerWidthGt660 = containerWidth.value > 660
+  return props.permanentVolumeSlider && windowWidthGt660 && containerWidthGt660
+})
 
 const floatingSliderMenu = ref(false)
 
@@ -84,15 +94,18 @@ watch(() => permanentVolumeSlider.value, () => {
       />
     </template>
 
-    <!--    <VCard style="background: rgb(var(&#45;&#45;v-theme-surface))" class="ml-3">-->
-    <div style="background: rgb(var(--v-theme-surface))" class="ml-3 elevation-2">
-      <!--      <VolumeSlider v-model:volume="volume" style="margin: 0 10px; height: 36px" />-->
+    <div class="floating-volume ml-3 elevation-2 rounded-lg" style="background: rgb(var(--v-theme-surface))">
       <VolumeSlider
         v-model:volume="volume"
         :volume-slider-color="volumeSliderColor"
         floating
       />
     </div>
-    <!--    </VCard>-->
   </VMenu>
 </template>
+
+<style lang="scss" scoped>
+  .floating-volume {
+    width: 30px;
+  }
+</style>
