@@ -3,12 +3,21 @@ import BaseControls from '@playerify/components/BaseControls.vue'
 import ExtraControls from '@playerify/components/ExtraControls.vue'
 import Playlist from '@playerify/components/Playlist.vue'
 import Progress from '@playerify/components/Progress.vue'
-import { useMediaControls, UseMediaControlsReturn } from '@vueuse/core'
-import { computed, reactive, Ref, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { useElementSize, useMediaControls, UseMediaControlsReturn } from '@vueuse/core'
+import {
+  ComponentPublicInstance,
+  computed,
+  reactive,
+  Ref,
+  ref,
+  shallowRef,
+  useTemplateRef,
+  watch
+} from 'vue'
 import { PlayerType } from '@playerify/enums'
 import { PlaylistItem, PlaylistItemInternal } from '@playerify/types'
 import { isFloat, stringify, processPlaylist } from '@playerify/utils'
-import { useListen } from '@playerify/composables/useEventBus'
+import { useEvent, useListen } from '@playerify/composables/useEventBus'
 
 const props = defineProps({
   type: { validator: (value: PlayerType) => Object.values(PlayerType).includes(value) },
@@ -133,7 +142,9 @@ const endBuffer = computed(() => {
       : 0
 })
 
-controls.value.error = 'No playlist provided'
+if (!props.playlist.length) {
+  controls.value.error = 'No playlist provided'
+}
 
 watch(() => currentMedia.value, () => {
   if (media.value !== null) {
@@ -148,6 +159,9 @@ watch(() => props.playlist, () => {
   playList.value = processPlaylist(props.playlist)
   if (playList.value.length) {
     currentMedia.value = playList.value[0]
+
+    // const notLoaded = playList.value.filter((item: PlaylistItemInternal) => !item.loaded)
+    controls.value.error = 'Some files can\'t be loaded'
   }
 }, { deep: true, immediate: true })
 
@@ -200,121 +214,126 @@ watch(() => currentMedia.value, () => {
 watch(() => props.coverImage, () => {
   currentCoverImage.value = props.coverImage
 })
+
+const playerContainer = useTemplateRef<ComponentPublicInstance>('playerContainer')
+const { width: playerContainerWidth } = useElementSize(playerContainer)
+
+watch(playerContainerWidth, () => {
+  useEvent('playerify--container-resize', playerContainerWidth.value)
+})
 </script>
 
 <template>
-  <div class="outline-none" :tabindex="0">
-    <VCard>
-      <VCardText
-        @keydown.prevent.space="playerControls.playing = !playerControls.playing"
-        @keydown.right="playerControls.currentTime += defaultRewind"
-        @keydown.left="playerControls.currentTime -= defaultRewind"
-      >
-        <div v-if="!currentMedia || currentMedia.src === ''" class="d-flex">
-          <VProgressCircular indeterminate width="1" color="primary ma-auto" />
-        </div>
-        <div v-else class="mt-5 relative rounded-md shadow overflow-hidden text-center">
-          <template v-if="currentType === PlayerType.AUDIO">
-            <div v-if="currentCoverImage" :class="coverImageOriginalSize ? 'cover-image' : ''">
-              <VImg :src="currentCoverImage" v-bind="coverImageAttributes" class="ma-auto" />
-            </div>
-            <audio
-              ref="media"
-              :key="currentMedia.src"
-              class="w-full block"
-              :loop="loop"
-              @click="playerControls.playing = !playerControls.playing"
-            />
-          </template>
-          <template v-else>
-            <video
-              ref="media"
-              :key="currentMedia.src"
-              class="w-full block"
-              :width="frameWidth"
-              :height="frameHeight"
-              :loop="loop"
-              :poster="currentCoverImage"
-              @click="playerControls.playing = !playerControls.playing"
-            />
-          </template>
-          <div v-if="!hideFileName" :class="currentType === PlayerType.VIDEO ? 'mt-4' : ''">
-            {{ currentFileName }}
+  <VCard ref="playerContainer">
+    <VCardText
+      @keydown.prevent.space="playerControls.playing = !playerControls.playing"
+      @keydown.right="playerControls.currentTime += defaultRewind"
+      @keydown.left="playerControls.currentTime -= defaultRewind"
+    >
+      <div v-if="!currentMedia || currentMedia.src === ''" class="d-flex">
+        <VProgressCircular indeterminate width="1" color="primary ma-auto" />
+      </div>
+      <div v-else class="mt-5 relative rounded-md shadow overflow-hidden text-center">
+        <template v-if="currentType === PlayerType.AUDIO">
+          <div v-if="currentCoverImage" :class="coverImageOriginalSize ? 'cover-image' : ''">
+            <VImg :src="currentCoverImage" v-bind="coverImageAttributes" class="ma-auto" />
           </div>
-          <!--      <div>-->
-          <!--        Unable to load src-->
-          <!--      </div>-->
-        </div>
-
-        <div v-if="!hideAllControls && !hideProgress" class="w-100 d-flex align-center">
-          <Progress
-            v-model:current-time="playerControls.currentTime"
-            :disabled="media === null"
-            :end-buffer="endBuffer"
-            :duration="playerControls.duration"
-            :waiting="playerControls?.waiting ?? true"
-            :progress-rounded="progressRounded"
-            :progress-slider-color="progressSliderColor"
-            :progress-color="progressColor"
-            :buffer-color="bufferColor"
-            :hide-duration="hideDuration"
+          <audio
+            ref="media"
+            :key="currentMedia.src"
+            class="w-full block"
+            :loop="loop"
+            @click="playerControls.playing = !playerControls.playing"
           />
+        </template>
+        <template v-else>
+          <video
+            ref="media"
+            :key="currentMedia.src"
+            class="w-full block"
+            :width="frameWidth"
+            :height="frameHeight"
+            :loop="loop"
+            :poster="currentCoverImage"
+            @click="playerControls.playing = !playerControls.playing"
+          />
+        </template>
+        <div v-if="!hideFileName" :class="currentType === PlayerType.VIDEO ? 'mt-4' : ''">
+          {{ currentFileName }}
         </div>
+        <!--      <div>-->
+        <!--        Unable to load src-->
+        <!--      </div>-->
+      </div>
 
-        <div v-if="!hideAllControls" class="d-flex flex-row">
-          <BaseControls
-            v-if="!hideMainControls"
-            v-model:playing="playerControls.playing"
-            v-model:volume="playerControls.volume"
-            v-model:muted="playerControls.muted"
+      <div v-if="!hideAllControls && !hideProgress" class="w-100 d-flex align-center">
+        <Progress
+          v-model:current-time="playerControls.currentTime"
+          :disabled="media === null"
+          :end-buffer="endBuffer"
+          :duration="playerControls.duration"
+          :waiting="playerControls?.waiting ?? true"
+          :progress-rounded="progressRounded"
+          :progress-slider-color="progressSliderColor"
+          :progress-color="progressColor"
+          :buffer-color="bufferColor"
+          :hide-duration="hideDuration"
+        />
+      </div>
+
+      <div v-if="!hideAllControls" class="d-flex flex-row">
+        <BaseControls
+          v-if="!hideMainControls"
+          v-model:playing="playerControls.playing"
+          v-model:volume="playerControls.volume"
+          v-model:muted="playerControls.muted"
+          :disabled="media === null"
+          :disabled-prev-track-button="!prevTrackAvailable"
+          :disabled-next-track-button="!nextTrackAvailable"
+          :hide-prev-track-button="hidePrevTrackButton"
+          :hide-next-track-button="hideNextTrackButton"
+          :hide-play-button="hidePlayButton"
+          :hide-volume-button="hideVolumeButton"
+          :btn-rounded="btnRounded"
+          :play-button-color="playButtonColor"
+          :pause-button-color="pauseButtonColor"
+          :volume-button-color="volumeButtonColor"
+          :volume-off-button-color="volumeOffButtonColor"
+          :volume-slider-color="volumeSliderColor"
+          :permanent-volume-slider="permanentVolumeSlider"
+        />
+
+        <div v-if="!hideExtraControls" class="ml-auto extra-actions">
+          <ExtraControls
+            v-model:media="media"
+            v-model:loop="loop"
+            v-model:is-picture-in-picture="playerControls.isPictureInPicture"
+            v-model:open-playlist="openPlaylist"
             :disabled="media === null"
-            :disabled-prev-track-button="!prevTrackAvailable"
-            :disabled-next-track-button="!nextTrackAvailable"
-            :hide-prev-track-button="hidePrevTrackButton"
-            :hide-next-track-button="hideNextTrackButton"
-            :hide-play-button="hidePlayButton"
-            :hide-volume-button="hideVolumeButton"
+            :hide-playlist-button="hidePlaylistButton"
+            :hide-playback-rate-button="hidePlaybackRateButton"
+            :hide-extras-button="hideExtrasButton"
+            :hide-fullscreen-button="hideFullscreenButton"
+            :supports-picture-in-picture="playerControls.supportsPictureInPicture"
             :btn-rounded="btnRounded"
-            :play-button-color="playButtonColor"
-            :pause-button-color="pauseButtonColor"
-            :volume-button-color="volumeButtonColor"
-            :volume-off-button-color="volumeOffButtonColor"
-            :volume-slider-color="volumeSliderColor"
-            :permanent-volume-slider="permanentVolumeSlider"
+            :playlist-button-color="playlistButtonColor"
+            :playback-rate-button-color="playbackRateButtonColor"
+            :extras-button-color="extrasButtonColor"
+            :fullscreen-button-color="fullscreenButtonColor"
+            :is-video="currentMedia?.type === PlayerType.VIDEO"
+            @toggle-fullscreen="toggleFullscreen"
+            @toggle-picture-in-picture="togglePictureInPicture"
           />
-
-          <div v-if="!hideExtraControls" class="ml-auto extra-actions">
-            <ExtraControls
-              v-model:media="media"
-              v-model:loop="loop"
-              v-model:is-picture-in-picture="playerControls.isPictureInPicture"
-              v-model:open-playlist="openPlaylist"
-              :disabled="media === null"
-              :hide-playlist-button="hidePlaylistButton"
-              :hide-playback-rate-button="hidePlaybackRateButton"
-              :hide-extras-button="hideExtrasButton"
-              :hide-fullscreen-button="hideFullscreenButton"
-              :supports-picture-in-picture="playerControls.supportsPictureInPicture"
-              :btn-rounded="btnRounded"
-              :playlist-button-color="playlistButtonColor"
-              :playback-rate-button-color="playbackRateButtonColor"
-              :extras-button-color="extrasButtonColor"
-              :fullscreen-button-color="fullscreenButtonColor"
-              :is-video="currentMedia?.type === PlayerType.VIDEO"
-              @toggle-fullscreen="toggleFullscreen"
-              @toggle-picture-in-picture="togglePictureInPicture"
-            />
-          </div>
         </div>
+      </div>
 
-        <div v-if="!hideAllControls && !hideExtraControls" class="mt-3">
-          <Playlist v-model:media="currentMedia" v-model:open-playlist="openPlaylist" :playlist="playList" :playlist-variant="playlistVariant" />
-        </div>
+      <div v-if="!hideAllControls && !hideExtraControls" class="mt-3">
+        <Playlist v-model:media="currentMedia" v-model:open-playlist="openPlaylist" :playlist="playList" :playlist-variant="playlistVariant" />
+      </div>
 
-        <pre v-if="debug" class="code-block" lang="yaml">{{ text }}</pre>
-      </VCardText>
-    </VCard>
-  </div>
+      <pre v-if="debug" class="code-block" lang="yaml">{{ text }}</pre>
+    </VCardText>
+  </VCard>
 </template>
 
 <style lang="scss" scoped>

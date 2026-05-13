@@ -1,4 +1,9 @@
-### v0.4.0
+### v0.4.1
+- fix floating volume slider appearance
+- slightly improve error processing
+- update build
+
+- ### v0.4.0
 - support original or adaptive cover image
 - add "picture in picture" mode
 - customizable control buttons

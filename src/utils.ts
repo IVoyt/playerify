@@ -52,7 +52,7 @@ const processPlaylist = (playlist: string[]|PlaylistItem[]): Array<PlaylistItemI
 }
 
 async function getDuration(url: string): Promise<{ duration: number, type: string }> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const video = document.createElement('video')
 
     video.preload = 'metadata'
@@ -62,7 +62,7 @@ async function getDuration(url: string): Promise<{ duration: number, type: strin
       const isVideo = video.videoWidth > 0 && video.videoHeight > 0
       resolve({ duration: video.duration, type: isVideo ? 'video' : 'audio' })
     }
-    video.onerror = (err) => console.log('getDuration err', err)
+    video.onerror = (err) => reject(err)
   })
 }
 
