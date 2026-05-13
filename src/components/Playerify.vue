@@ -4,7 +4,16 @@ import ExtraControls from '@playerify/components/ExtraControls.vue'
 import Playlist from '@playerify/components/Playlist.vue'
 import Progress from '@playerify/components/Progress.vue'
 import { useElementSize, useMediaControls, UseMediaControlsReturn } from '@vueuse/core'
-import { computed, reactive, Ref, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import {
+  ComponentPublicInstance,
+  computed,
+  reactive,
+  Ref,
+  ref,
+  shallowRef,
+  useTemplateRef,
+  watch
+} from 'vue'
 import { PlayerType } from '@playerify/enums'
 import { PlaylistItem, PlaylistItemInternal } from '@playerify/types'
 import { isFloat, stringify, processPlaylist } from '@playerify/utils'
@@ -133,7 +142,9 @@ const endBuffer = computed(() => {
       : 0
 })
 
-controls.value.error = 'No playlist provided'
+if (!props.playlist.length) {
+  controls.value.error = 'No playlist provided'
+}
 
 watch(() => currentMedia.value, () => {
   if (media.value !== null) {
@@ -148,6 +159,9 @@ watch(() => props.playlist, () => {
   playList.value = processPlaylist(props.playlist)
   if (playList.value.length) {
     currentMedia.value = playList.value[0]
+
+    // const notLoaded = playList.value.filter((item: PlaylistItemInternal) => !item.loaded)
+    controls.value.error = 'Some files can\'t be loaded'
   }
 }, { deep: true, immediate: true })
 
