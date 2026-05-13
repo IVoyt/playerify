@@ -27,20 +27,12 @@ defineProps({
   permanentVolumeSlider: { type: Boolean, default: true },
 })
 
-function firstTrack() {
-  useEvent('playerify--first-track')
-}
-
 function prevTrack() {
   useEvent('playerify--prev-track')
 }
 
 function nextTrack() {
   useEvent('playerify--next-track')
-}
-
-function lastTrack() {
-  useEvent('playerify--last-track')
 }
 </script>
 
