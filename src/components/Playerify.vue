@@ -29,6 +29,7 @@ const props = defineProps({
   frameWidth: { type: String, default: '100%' },
   frameHeight: { type: String, default: '' },
   hideFileName: { type: Boolean, default: false },
+  hidePlaylist: { type: Boolean, default: false },
   hideDuration: { type: Boolean, default: false },
   hideAllControls: { type: Boolean, default: false },
   hideProgress: { type: Boolean, default: false },
@@ -327,7 +328,7 @@ watch(playerContainerWidth, () => {
         </div>
       </div>
 
-      <div v-if="!hideAllControls && !hideExtraControls" class="mt-3">
+      <div v-if="!hideAllControls && !hideExtraControls && !hidePlaylist" class="mt-3">
         <Playlist v-model:media="currentMedia" v-model:open-playlist="openPlaylist" :playlist="playList" :playlist-variant="playlistVariant" />
       </div>
 

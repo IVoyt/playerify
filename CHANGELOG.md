@@ -1,3 +1,6 @@
+### v0.4.2
+- fix a broken hiding playlist
+
 ### v0.4.1
 - fix floating volume slider appearance
 - slightly improve error processing
