@@ -26,6 +26,7 @@ const props = defineProps({
   playlist: { type: Array<string|PlaylistItem>, default: () => [] },
   playlistVariant: { type: String, default: 'elevated' },
   playlistButtonColor: { type: String, default: 'default' },
+  autoplayNextTrack: { type: Boolean, default: true },
   frameWidth: { type: String, default: '100%' },
   frameHeight: { type: String, default: '' },
   hideFileName: { type: Boolean, default: false },
@@ -61,6 +62,8 @@ const props = defineProps({
   permanentVolumeSlider: { type: Boolean, default: true },
   debug: { type: Boolean, default: false },
 })
+
+const autostartNext = ref(false)
 
 const openPlaylist = ref(!props.hidePlaylistButton)
 
@@ -156,7 +159,7 @@ watch(() => currentMedia.value, () => {
 }, { deep: true })
 
 const playList: Ref<PlaylistItemInternal[]> = ref([])
-watch(() => props.playlist, () => {
+watch(props.playlist, () => {
   playList.value = processPlaylist(props.playlist)
   if (playList.value.length) {
     currentMedia.value = playList.value[0]
@@ -180,11 +183,12 @@ useListen('playerify--prev-track', () => {
     currentMedia.value = playList.value[trackIndex.value - 1]
   }
 })
-useListen('playerify--next-track', () => {
+useListen('playerify--next-track', loadNextTrack)
+function loadNextTrack() {
   if (nextTrackAvailable.value) {
     currentMedia.value = playList.value[trackIndex.value + 1]
   }
-})
+}
 
 function toggleFullscreen () {
   if (currentType.value !== PlayerType.VIDEO) {
@@ -206,7 +210,7 @@ function togglePictureInPicture () {
   playerControls.value.togglePictureInPicture()
 }
 
-watch(() => currentMedia.value, () => {
+watch(currentMedia, () => {
   if (currentMedia.value) {
     loadSrc()
   }
@@ -221,6 +225,18 @@ const { width: playerContainerWidth } = useElementSize(playerContainer)
 
 watch(playerContainerWidth, () => {
   useEvent('playerify--container-resize', playerContainerWidth.value)
+})
+
+watch(() => playerControls.value.ended, () => {
+  if (playerControls.value.ended && props.autoplayNextTrack && nextTrackAvailable.value) {
+    loadNextTrack()
+    autostartNext.value = true
+  }
+})
+watch(() => playerControls.value.waiting, () => {
+  if (!playerControls.value.waiting && props.autoplayNextTrack && autostartNext.value) {
+    playerControls.value.playing = !playerControls.value.playing
+  }
 })
 </script>
 

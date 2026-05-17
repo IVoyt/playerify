@@ -1,3 +1,6 @@
+### v0.4.3
+- fix the next track does not autostart playing when the current track has reached the end
+
 ### v0.4.2
 - fix a broken hiding playlist
 

@@ -6,47 +6,48 @@ The main media player component.
 
 ### Props
 
-| Prop                    | Type | Default     | Description                                                    |
-|-------------------------|------|-------------|----------------------------------------------------------------|
-| playlist                | string[] \| PlaylistItem[] | []          | Array of playlist items - either URLs (string[]) or objects    |
-| coverImage              | String | ''          | Default cover image URL (falls back to playlist item cover)    |
-| coverImageOriginalSize  | Boolean | true        | Use original cover image size (false scales to frame dimensions) |
-| type                    | String | 'video'     | 'audio' or 'video'                                             |
-| hideAllControls         | Boolean | false       | Hide all controls                                              |
-| hideProgress            | Boolean | false       | Hide progress bar                                              |
-| hideMainControls        | Boolean | false       | Hide main controls (play, volume)                              |
-| hideExtraControls       | Boolean | false       | Hide extra controls (playlist, settings, fullscreen)           |
-| hidePlayButton          | Boolean | false       | Hide play/pause button                                         |
-| hideVolumeButton        | Boolean | false       | Hide volume button                                             |
-| hidePlaylistButton      | Boolean | false       | Hide playlist button                                           |
-| hidePlaybackRateButton  | Boolean | false       | Hide playback rate option in extras menu                       |
-| hideExtrasButton        | Boolean | false       | Hide extras menu button                                        |
-| hideFullscreenButton    | Boolean | false       | Hide fullscreen button                                         |
-| hideFileName            | Boolean | false       | Hide filename                                                  |
-| hideDuration            | Boolean | false       | Hide time/duration                                             |
-| hidePlaylist            | Boolean | false       | Hide playlist                                                  |
-| playlistVariant         | String | 'elevated'  | Playlist variant (text, flat, elevated, tonal, outlined)       |
-| playlistButtonColor     | String | 'default'   | Vuetify color for playlist button                              |
-| frameWidth              | String | '100%'      | Frame width                                                    |
-| frameHeight             | String | ''          | Frame height                                                   |
-| playButtonColor         | String | 'default'   | Vuetify color for play button                                  |
-| pauseButtonColor        | String | 'default'   | Vuetify color for pause button                                 |
-| volumeButtonColor       | String | 'default'   | Vuetify color for volume button                                |
-| volumeOffButtonColor    | String | 'default'   | Vuetify color for muted volume button                          |
-| playbackRateButtonColor | String | 'default'   | Vuetify color for playback rate button                         |
-| extrasButtonColor       | String | 'default'   | Vuetify color for extras button                                |
-| fullscreenButtonColor   | String | 'default'   | Vuetify color for fullscreen button                            |
-| btnRounded              | String | 'sm'        | Button roundness (none, sm, md, lg, xl, pill, circle)          |
-| progressRounded         | String | 'sm'        | Progress bar roundness                                         |
-| progressSliderColor     | String | 'primary'   | Progress slider color                                          |
-| volumeSliderColor       | String | 'primary'   | Volume slider color                                            |
-| defaultRewind           | Number | 10          | Seconds to skip on left/right arrow keys (1-60)                |
-| defaultVolume           | Number | 0.8         | Initial volume (0-1)                                           |
-| progressColor           | String | 'primary'   | Progress bar color                                             |
-| bufferColor             | String | 'secondary' | Buffer bar color                                               |
-| fileName                | String | ''          | Custom file name to display (falls back to source URL basename) |
-| permanentVolumeSlider   | Boolean | true        | Always show volume slider                                      |
-| debug                   | Boolean | false       | Show debug YAML output                                         |
+| Prop                    | Type                        | Default     | Description                                                      |
+|-------------------------|-----------------------------|-------------|------------------------------------------------------------------|
+| playlist                | string[] \| PlaylistItem[]  | []          | Array of playlist items                                          |
+| coverImage              | String                      | ''          | Default cover image URL (falls back to playlist item cover)      |
+| coverImageOriginalSize  | Boolean                     | true        | Use original cover image size (false scales to frame dimensions) |
+| type                    | String                      | 'video'     | 'audio' or 'video'                                               |
+| hideAllControls         | Boolean                     | false       | Hide all controls                                                |
+| hideProgress            | Boolean                     | false       | Hide progress bar                                                |
+| hideMainControls        | Boolean                     | false       | Hide main controls (play, volume)                                |
+| hideExtraControls       | Boolean                     | false       | Hide extra controls (playlist, settings, fullscreen)             |
+| hidePlayButton          | Boolean                     | false       | Hide play/pause button                                           |
+| hideVolumeButton        | Boolean                     | false       | Hide volume button                                               |
+| hidePlaylistButton      | Boolean                     | false       | Hide playlist button                                             |
+| hidePlaybackRateButton  | Boolean                     | false       | Hide playback rate option in extras menu                         |
+| hideExtrasButton        | Boolean                     | false       | Hide extras menu button                                          |
+| hideFullscreenButton    | Boolean                     | false       | Hide fullscreen button                                           |
+| hideFileName            | Boolean                     | false       | Hide filename                                                    |
+| hideDuration            | Boolean                     | false       | Hide time/duration                                               |
+| hidePlaylist            | Boolean                     | false       | Hide playlist                                                    |
+| playlistVariant         | String                      | 'elevated'  | Playlist variant (text, flat, elevated, tonal, outlined)         |
+| playlistButtonColor     | String                      | 'default'   | Vuetify color for playlist button                                |
+| autoplayNextTrack       | Boolean                     | true        | Auto-play the next track when current track ends                 |
+| frameWidth              | String                      | '100%'      | Frame width                                                      |
+| frameHeight             | String                      | ''          | Frame height                                                     |
+| playButtonColor         | String                      | 'default'   | Vuetify color for play button                                    |
+| pauseButtonColor        | String                      | 'default'   | Vuetify color for pause button                                   |
+| volumeButtonColor       | String                      | 'default'   | Vuetify color for volume button                                  |
+| volumeOffButtonColor    | String                      | 'default'   | Vuetify color for muted volume button                            |
+| playbackRateButtonColor | String                      | 'default'   | Vuetify color for playback rate button                           |
+| extrasButtonColor       | String                      | 'default'   | Vuetify color for extras button                                  |
+| fullscreenButtonColor   | String                      | 'default'   | Vuetify color for fullscreen button                              |
+| btnRounded              | String                      | 'sm'        | Button roundness (none, sm, md, lg, xl, pill, circle)            |
+| progressRounded         | String                      | 'sm'        | Progress bar roundness                                           |
+| progressSliderColor     | String                      | 'primary'   | Progress slider color                                            |
+| volumeSliderColor       | String                      | 'primary'   | Volume slider color                                              |
+| defaultRewind           | Number                      | 10          | Seconds to skip on left/right arrow keys (1-60)                  |
+| defaultVolume           | Number                      | 0.8         | Initial volume (0-1)                                             |
+| progressColor           | String                      | 'primary'   | Progress bar color                                               |
+| bufferColor             | String                      | 'secondary' | Buffer bar color                                                 |
+| fileName                | String                      | ''          | Custom file name to display (falls back to source URL basename)  |
+| permanentVolumeSlider   | Boolean                     | true        | Always show volume slider                                        |
+| debug                   | Boolean                     | false       | Show debug YAML output                                           |
 
 > **Note:** `hideAllControls="true"` is intended for video content only.<br>It overrides all other hide-* props — they will all be hidden regardless of their individual values.
 
