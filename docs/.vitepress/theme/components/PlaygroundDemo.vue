@@ -72,6 +72,7 @@ const hideProgress = ref(false)
 const coverImageOriginalSize = ref(true)
 const permanentVolumeSlider = ref(true)
 
+const autoplayNextTrack = ref(true)
 const defaultRewind = ref(10)
 const defaultVolume = ref(0.8)
 const btnRounded = ref('sm')
@@ -85,6 +86,7 @@ const generatedCode = computed(() => {
   const props = [
     `:playlist="${JSON.stringify(playlist)}"`,
     `:hide-playlist-button="${hidePlaylistButton.value}"`,
+    `:autoplay-next-track="${autoplayNextTrack.value}"`,
     `:cover-image="${coverImage.value}"`,
     `:cover-image-original-size="${coverImageOriginalSize.value}"`,
     `:frame-width="${frameWidth.value}"`,
@@ -133,6 +135,7 @@ const activeTab = ref('controls')
           <Playerify
             :playlist="playlist"
             :hide-playlist-button="hidePlaylistButton"
+            :autoplay-next-track="autoplayNextTrack"
             :cover-image="coverImage"
             :cover-image-original-size="coverImageOriginalSize"
             :frame-width="frameWidth"
@@ -546,6 +549,18 @@ const activeTab = ref('controls')
                         step="0.1"
                         class="mt-6"
                         thumb-label="always"
+                        :hide-details="true"
+                      />
+                    </VCol>
+                  </VRow>
+
+                  <VRow>
+                    <VCol cols="12" md="6">
+                      <VSwitch
+                        v-model="autoplayNextTrack"
+                        color="primary"
+                        label="Autoplay next track"
+                        class="mb-2"
                         :hide-details="true"
                       />
                     </VCol>
